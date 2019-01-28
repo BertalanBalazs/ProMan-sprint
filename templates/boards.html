@@ -7,12 +7,41 @@
         <title>ProMan</title>
 
         <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+
+        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
+        <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
+        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
+        <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
         <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
+
         <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
         <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
     </head>
     <body>
-        <h1>ProMan</h1>
-        <div id="boards">Boards are loading...</div>
+
+    {% raw %}
+            <div id="app">
+
+                <h1>ProMan</h1>
+                <div id="boards">Boards are loading...</div>
+            <b-card v-for="board in boards" no-body class="mb-1">
+              <b-card-header header-tag="header" class="p-1" role="tab">
+                <b-btn v-b-toggle="board" block href="#"  variant="info">{{ board.title }}</b-btn>
+              </b-card-header>
+              <b-collapse :id="board.id" visible accordion="my-accordion" role="tabpanel">
+                <b-card-body>
+                   <p class="card-text">
+                    This is the board body
+                  </p>
+                </b-card-body>
+              </b-collapse>
+            </b-card>
+
+          </div>
+{% endraw %}
+
+
     </body>
 </html>
