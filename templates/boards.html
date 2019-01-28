@@ -11,8 +11,17 @@
         <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 
         <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
+        <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+        <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js" defer></script>
+        <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+        <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
+
+
+
         <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
         <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
+
+
         <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
         <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
 
@@ -25,19 +34,46 @@
             <div id="app">
 
                 <h1>ProMan</h1>
-                <div id="boards">Boards are loading...</div>
-            <b-card v-for="board in boards" no-body class="mb-1">
-              <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn v-b-toggle="'id-' + board.id" block href="#"  variant="info">{{ board.title }}</b-btn>
-              </b-card-header>
-              <b-collapse :id="'id-' + board.id" visible accordion="my-accordion" role="tabpanel">
-                <b-card-body>
-                   <p class="card-text">
-                    This is the board body
-                  </p>
-                </b-card-body>
-              </b-collapse>
-            </b-card>
+                <b-button @click="addBoard" >
+                    Add boards
+                </b-button>
+
+
+                <draggable v-model="boards"  @start="drag=true" @end="drag=false">
+
+                    <b-card v-for="(board, index) in boards" no-body class="mb-1">
+                      <b-card-header header-tag="header" class="p-1" role="tab">
+                        <b-btn v-b-toggle="'id-' + index" block href="#"  variant="info">{{ board.title }}</b-btn>
+                      </b-card-header>
+                      <b-collapse :id="'id-' + index"  role="tabpanel">
+                        <b-card-body>
+
+
+                           <p class="card-text">
+                            This is the board body of id: {{ board.id }} title: {{ board.title }}
+                           </p>
+                               <div class="container-fluid px-sm-5">
+                                  <div class="row mx-sm-n5">
+                                      <b-card v-for="column in columns" class="col-sm myColumn">
+                                        <b-card-header :header="column" header-tag="header" class="p-1" role="tab">
+                                        </b-card-header>
+                                          <b-card-body>
+                                          </b-card-body>
+                                      </b-card>
+
+                                  </div>
+                                </div>
+
+
+                        </b-card-body>
+
+
+
+
+                      </b-collapse>
+                    </b-card>
+
+                </draggable>
 
           </div>
 {% endraw %}

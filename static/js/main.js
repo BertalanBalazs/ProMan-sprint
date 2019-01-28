@@ -1,9 +1,19 @@
 
 
 var app = new Vue({
-  el: '#app',
-  data: {
-      boards: sampleData.boards
+    el: '#app',
+    components:{
+      // draggable
+    },
+    data: {
+        drag: false,
+        boards: sampleData.boards,
+        columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt']
+    },
+    methods: {
+        addBoard() {
+            this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+        }
     }
 })
 
