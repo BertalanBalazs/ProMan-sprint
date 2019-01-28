@@ -45,21 +45,21 @@ let sampleData = {
             "title": "task1",
             "board_id": 1,
             "status_id": 1,
-            "order": 3
+            "order_num": 3
         },
         {
             "id": 2,
             "title": "task2",
             "board_id": 1,
             "status_id": 2,
-            "order": 2
+            "order_num": 2
         },
         {
             "id": 3,
             "title": "task3",
             "board_id": 1,
             "status_id": 4,
-            "order": 1
+            "order_num": 1
         },
         {
             "id": 4,
@@ -73,14 +73,14 @@ let sampleData = {
             "title": "task5",
             "board_id": 2,
             "status_id": 2,
-            "order": 2
+            "order_num": 2
         },
         {
             "id": 6,
             "title": "task6",
             "board_id": 2,
             "status_id": 3,
-            "order": 1
+            "order_num": 1
         }
     ],
     "users": [
