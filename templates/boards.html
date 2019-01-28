@@ -28,9 +28,9 @@
                 <div id="boards">Boards are loading...</div>
             <b-card v-for="board in boards" no-body class="mb-1">
               <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn v-b-toggle="board" block href="#"  variant="info">{{ board.title }}</b-btn>
+                <b-btn v-b-toggle="'id-' + board.id" block href="#"  variant="info">{{ board.title }}</b-btn>
               </b-card-header>
-              <b-collapse :id="board.id" visible accordion="my-accordion" role="tabpanel">
+              <b-collapse :id="'id-' + board.id" visible accordion="my-accordion" role="tabpanel">
                 <b-card-body>
                    <p class="card-text">
                     This is the board body
