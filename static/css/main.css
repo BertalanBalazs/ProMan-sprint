@@ -1,3 +1,9 @@
 #boards {
     background-color: green;
 }
+.myColumn {
+    min-height: 50vh;
+    border: black;
+    border-style: solid;
+
+}
