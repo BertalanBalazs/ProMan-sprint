@@ -2,7 +2,7 @@ from connection import connection_handler
 import bcrypt
 
 # sample
-@connection.connection_handler
+@connection_handler
 def get_boards(cursor, criteria):
     if criteria:
         cursor.execute(f"""
