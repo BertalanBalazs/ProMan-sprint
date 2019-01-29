@@ -7,3 +7,65 @@
     border-style: solid;
 
 }
+
+
+/* Modal Content/Box */
+
+#id01 , #id02 {
+    height: 26%;
+    margin: 0 35% 0 35%;
+    width: 30%;
+    background-color: rgba(0, 0, 0, 0.64);
+    border-radius: 6px;
+    position: absolute;
+}
+
+input{
+    border-radius: 6px;
+    margin-bottom: 2rem;
+}
+
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 5px auto; /* 15% from the top and centered */
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.modal-container{
+    text-align: center;
+}
+/* The Close Button */
+.close {
+    position: absolute;
+    right: 20px;
+    top: 0px;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+    z-index:1000;
+}
+
+/* Close button on hover */
+.close:hover,
+.close:focus {
+  color: red;
+  cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+  -webkit-animation: animatezoom 0.6s;
+  animation: animatezoom 0.6s
+}
+
+@-webkit-keyframes animatezoom {
+  from {-webkit-transform: scale(0)}
+  to {-webkit-transform: scale(1)}
+}
+
+@keyframes animatezoom {
+  from {transform: scale(0)}
+  to {transform: scale(1)}
+}
