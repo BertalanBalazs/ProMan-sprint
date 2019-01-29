@@ -11,11 +11,15 @@ var app = new Vue({
         columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt']
     },
     methods: {
-        addBoard() {
-            this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+        async addBoard() {
+            console.log(await $.ajax({
+                url: 'http://127.0.0.1:5000/boards',
+                type: 'DELETE',
+                data: JSON.stringify({data: "sampleData"})
+            }))
         }
     }
-})
+});
 
 
 // This function is to initialize the application
