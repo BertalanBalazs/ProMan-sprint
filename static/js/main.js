@@ -1,3 +1,16 @@
+var x = document.getElementById("myAudio");
+
+function playAudio() {
+    document.getElementById('play').style.display='none';
+    document.getElementById('stop').style.display='block';
+    x.play();
+}
+
+function pauseAudio() {
+    document.getElementById('stop').style.display='none';
+    document.getElementById('play').style.display='block';
+    x.pause();
+}
 
 
 var app = new Vue({
@@ -15,7 +28,10 @@ var app = new Vue({
             this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
         }
     }
-})
+});
+
+
+
 
 
 // This function is to initialize the application

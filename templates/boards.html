@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ProMan</title>
-
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
@@ -92,6 +92,14 @@
         </form>
     </div>
 </div>
+<audio id="myAudio">
+    <source src="static/Szép a vasutas élet - MÁV Kampányfilm.mp3" type="audio/mp3">
+    Your browser does not support the audio element.
+</audio>
+<div id="player">
+    <i onclick="playAudio()" id="play" class="fas fa-volume-mute"></i>
+    <i onclick="pauseAudio()" id="stop" class="fas fa-volume-up"></i>
+</div>
 {% raw %}
 <div id="app">
 
@@ -143,7 +151,7 @@
             {% for message in messages %}
                 window.onload = function () {
                     alert('{{ message }}');
-                }
+                };
             {% endfor %}
         {% endif %}
     {% endwith %}
