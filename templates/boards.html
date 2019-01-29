@@ -1,83 +1,163 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <meta http-equiv="X-UA-Compatible" content="ie=edge">
-        <title>ProMan</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>ProMan</title>
 
-        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
-        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
-        <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
 
-        <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
-        <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
-        <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js" defer></script>
-        <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-        <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
-
-
-
-        <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
-        <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
+    <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js" defer></script>
+    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
 
 
-        <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
-        <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
-
-        <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
-        <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
-    </head>
-    <body>
-
-    {% raw %}
-            <div id="app">
-
-                <h1>ProMan</h1>
-                <b-button @click="addBoard" >
-                    Add boards
-                </b-button>
+    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
 
 
-                <draggable v-model="boards"  @start="drag=true" @end="drag=false">
+    <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
 
-                    <b-card v-for="(board, index) in boards" no-body class="mb-1">
-                      <b-card-header header-tag="header" class="p-1" role="tab">
-                        <b-btn v-b-toggle="'id-' + index" block href="#"  variant="info">{{ board.title }}</b-btn>
-                      </b-card-header>
-                      <b-collapse :id="'id-' + index"  role="tabpanel">
-                        <b-card-body>
+    <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            {% if username is undefined %}
+                {% if not username %}
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="document.getElementById('id02').style.display='block'" class="account_btn">
+                            Register
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" onclick="document.getElementById('id01').style.display='block'" class="account_btn">
+                            Login
+                        </a>
+                    </li>
+                {% endif %}
+            {% endif %}
+            {% if username is defined %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ url_for('log_user_out') }}">Logout</a>
+                </li>
+            {% endif %}
+        </ul>
+        {% if username is defined %}
+            <span class="navbar-text">
+                Hi {{ username.username }}!
+            </span>
+        {% endif %}
+    </div>
+</nav>
+<!-- LOGIN MODAL -->
+<div id="id01" class="modal">
+    <div id="reg-form" class="animate">
+        <span onclick="document.getElementById('id01').style.display='none'" class="close" title="Close">&times;</span>
+        <form action="{{ url_for('log_user_in') }}" method="POST">
+            <div class="modal-container">
+                <h4 class="title">Login</h4>
+                <p><input id="username" name="login_username" type="text"
+                          class="input" placeholder="username" required></p>
+                <p><input id="password" name="login_password" type="password"
+                          class="input" placeholder="password" required></p>
+                <p><button type="submit" class="button">Login</button></p>
+            </div>
+        </form>
+    </div>
+</div>
+<!-- REGISTER MODAL -->
+<div id="id02" class="modal">
+    <div id="reg-form" class="animate">
+        <span onclick="document.getElementById('id02').style.display='none'" class="close" title="Close">&times;</span>
+        <form action="{{ url_for('new_user_registration') }}" method=POST>
+            <div class="modal-container">
+                <h4 class="title">Register</h4>
+                <p><input id="username" name="username" type="text"
+                          class="input" placeholder="username" required></p>
+                <p><input id="password" name="password" type="password"
+                          class="input" placeholder="password" required></p>
+                <p><input id="confirm_password" name="confirm_password" type="password"
+                          class="input" placeholder="confirm password" required></p>
+                <p><button type="submit" class="button">Register</button></p>
+            </div>
+        </form>
+    </div>
+</div>
+{% raw %}
+<div id="app">
+
+    <h1>ProMan</h1>
+    <b-button @click="addBoard">
+        Add boards
+    </b-button>
 
 
-                           <p class="card-text">
-                            This is the board body of id: {{ board.id }} title: {{ board.title }}
-                           </p>
-                               <div class="container-fluid px-sm-5">
-                                  <div class="row mx-sm-n5">
-                                      <b-card v-for="column in columns" class="col-sm myColumn">
-                                        <b-card-header :header="column" header-tag="header" class="p-1" role="tab">
-                                        </b-card-header>
-                                          <b-card-body>
-                                          </b-card-body>
-                                      </b-card>
+    <draggable v-model="boards" @start="drag=true" @end="drag=false">
 
-                                  </div>
-                                </div>
+        <b-card v-for="(board, index) in boards" no-body class="mb-1">
+            <b-card-header header-tag="header" class="p-1" role="tab">
+                <b-btn v-b-toggle="'id-' + index" block href="#" variant="info">{{ board.title }}</b-btn>
+            </b-card-header>
+            <b-collapse :id="'id-' + index" role="tabpanel">
+                <b-card-body>
 
 
-                        </b-card-body>
+                    <p class="card-text">
+                        This is the board body of id: {{ board.id }} title: {{ board.title }}
+                    </p>
+                    <div class="container-fluid px-sm-5">
+                        <div class="row mx-sm-n5">
+                            <b-card v-for="column in columns" class="col-sm myColumn">
+                                <b-card-header :header="column" header-tag="header" class="p-1" role="tab">
+                                </b-card-header>
+                                <b-card-body>
+                                </b-card-body>
+                            </b-card>
+
+                        </div>
+                    </div>
 
 
+                </b-card-body>
 
 
-                      </b-collapse>
-                    </b-card>
+            </b-collapse>
+        </b-card>
 
-                </draggable>
+    </draggable>
 
-          </div>
+</div>
 {% endraw %}
+<script type="text/javascript">
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            {% for message in messages %}
+                window.onload = function () {
+                    alert('{{ message }}');
+                }
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+    var modal1 = document.getElementById('id01');
+    var modal2 = document.getElementById('id02');
 
-
-    </body>
+    window.onclick = function (event) {
+        if (event.target == modal1) {
+            modal1.style.display = "none";
+        }
+        else if (event.target == modal2) {
+            modal2.style.display = "none";
+        }
+    }
+</script>
+</body>
 </html>
