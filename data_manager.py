@@ -16,7 +16,12 @@ def get_boards(cursor, criteria):
                         """,
                        )
     return cursor.fetchall()
-
+@connection_handler
+def new_board(cursor,boardname,userid):
+    cursor.execute("""
+    INSERT INTO boards (title,is_active,user_id)
+    VALUES (%(boardname)s, true ,%(userid)s)""",
+                   {'boardname': boardname, 'userid': userid})
 
 def hash_password(plain_text_password):
     # By using bcrypt, the salt is saved into the hash itself

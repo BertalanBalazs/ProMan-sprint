@@ -3,8 +3,8 @@ import data_manager
 
 app = Flask(__name__)
 
-
 app.secret_key = "secret_key"
+
 
 @app.route("/")
 def index():
@@ -21,6 +21,22 @@ def get_boards():
     return make_db_query(criteria, data_manager.get_boards)
 
 
+@app.route('/newboard', methods=['POST'])
+def new_public_board():
+    new_board(0)
+
+@app.route('/newprivateboard', methods=['POST'])
+def new_public_board():
+    userid = session.get('username')
+    new_board(userid)
+
+
+def new_board(userid):
+    board_object = request.form['boardname']
+    board_title = board_object['title']
+    data_manager.new_board(board_title, userid)
+
+
 def make_db_query(criteria, getter_function):
     if criteria:
         key = list(criteria.keys())[0]
@@ -32,7 +48,6 @@ def make_db_query(criteria, getter_function):
         return jsonify({"done": False, "reason": "Database error"})
     else:
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
-
 
 
 def main():
@@ -53,7 +68,7 @@ def new_user_registration():
         flash("Username is already taken!")
     else:
         flash("Registration was successful!")
-        data_manager.register_new_user(username,password)
+        data_manager.register_new_user(username, password)
     return redirect(url_for('index'))
 
 
