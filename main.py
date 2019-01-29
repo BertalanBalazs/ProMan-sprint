@@ -33,7 +33,13 @@ def make_db_query(criteria, getter_function):
     else:
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
 
-
+@app.route('newstatus')
+def new_status():
+    status_object = request.form['status']
+    status_title = status_object['title']
+    board_id = request.form['board-id']
+    if not data_manager.get_status(status_title): data_manager.new_status(status_title)
+    data_manager.add_status_to_board(board_id,data_manager.get_status(status_title))
 
 def main():
     app.run(debug=True)
