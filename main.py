@@ -26,7 +26,7 @@ def new_public_board():
     new_board(0)
 
 @app.route('/newprivateboard', methods=['POST'])
-def new_public_board():
+def new_private_board():
     userid = session.get('username')
     new_board(userid)
 
