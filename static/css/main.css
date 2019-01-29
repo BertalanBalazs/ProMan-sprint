@@ -8,8 +8,23 @@
 
 }
 
+#play{
+    display: block;
+}
 
-/* Modal Content/Box */
+#stop{
+    display: none;
+}
+
+#player{
+    margin-left: 99%;
+}
+
+
+
+
+
+/*** Modal Content/Box ***/
 
 #id01 , #id02 {
     height: 26%;
