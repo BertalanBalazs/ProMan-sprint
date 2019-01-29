@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, jsonify
+from flask_socketio import SocketIO, send, emit
 import data_manager
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 
 @app.route("/")
@@ -29,9 +31,12 @@ def make_db_query(criteria, getter_function):
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
 
 
-
 def main():
-    app.run(debug=True)
+    socketio.run(
+        app,
+        host="0.0.0.0",
+        port="8000"
+    )
 
 
 if __name__ == '__main__':
