@@ -54,7 +54,7 @@ def new_user_registration():
     else:
         flash("Registration was successful!")
         data_manager.register_new_user(username,password)
-    return redirect(url_for('boards'))
+    return redirect(url_for('index'))
 
 
 @app.route('/login', methods=['POST'])
@@ -68,13 +68,13 @@ def log_user_in():
         session['username'] = username
     else:
         pass
-    return redirect(url_for('boards'))
+    return redirect(url_for('index'))
 
 
 @app.route('/logout')
 def log_user_out():
     session.pop('username', None)
-    return redirect(url_for('boards'))
+    return redirect(url_for('index'))
 
 
 if __name__ == '__main__':
