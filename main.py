@@ -18,16 +18,16 @@ def index():
 @app.route('/boards', methods=['GET'])
 def get_boards():
     criteria = request.args.to_dict()
-    return make_db_query(criteria, data_manager.get_boards)
+    return make_db_query(criteria, 'boards')
 
 
-def make_db_query(criteria, getter_function):
+def make_db_query(criteria, table):
     if criteria:
         key = list(criteria.keys())[0]
         value = criteria[key]
         criteria = {"key": key, "value": value}
     try:
-        query_result = getter_function(criteria)
+        query_result = data_manager.get_data(criteria, table)
     except:
         return jsonify({"done": False, "reason": "Database error"})
     else:

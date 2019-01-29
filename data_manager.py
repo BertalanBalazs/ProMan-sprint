@@ -2,17 +2,17 @@ from connection import connection_handler
 import bcrypt
 
 # sample
-@connection.connection_handler
-def get_boards(cursor, criteria):
+@connection_handler
+def get_data(cursor, criteria, table):
     if criteria:
         cursor.execute(f"""
-                        SELECT * FROM boards
+                        SELECT * FROM {table}
                         WHERE {criteria['key']} = %(value)s
                         """,
                        criteria)
     else:
         cursor.execute(f"""
-                        SELECT * FROM boards
+                        SELECT * FROM {table}
                         """,
                        )
     return cursor.fetchall()
