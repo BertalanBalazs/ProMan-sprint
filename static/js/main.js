@@ -1,16 +1,3 @@
-var x = document.getElementById("myAudio");
-
-function playAudio() {
-    document.getElementById('play').style.display='none';
-    document.getElementById('stop').style.display='block';
-    x.play();
-}
-
-function pauseAudio() {
-    document.getElementById('stop').style.display='none';
-    document.getElementById('play').style.display='block';
-    x.pause();
-}
 
 
 var app = new Vue({
@@ -24,14 +11,14 @@ var app = new Vue({
         columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt']
     },
     methods: {
-        addBoard() {
-            this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+        async addBoard() {
+            console.log(await $.ajax({
+                url: 'http://127.0.0.1:5000/cards/4',
+                type: 'DELETE'
+            }))
         }
     }
 });
-
-
-
 
 
 // This function is to initialize the application

@@ -1,10 +1,11 @@
 from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
-import data_manager
+import requests
+import bcrypt
 
 app = Flask(__name__)
 
-
 app.secret_key = "secret_key"
+
 
 @app.route("/")
 def index():
@@ -21,6 +22,7 @@ def get_boards():
     return make_db_query(criteria, data_manager.get_boards)
 
 
+
 def make_db_query(criteria, getter_function):
     if criteria:
         key = list(criteria.keys())[0]
@@ -32,6 +34,7 @@ def make_db_query(criteria, getter_function):
         return jsonify({"done": False, "reason": "Database error"})
     else:
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
+
 
 @app.route('newstatus')
 def new_status():
@@ -48,8 +51,8 @@ def main():
 @app.route('/registration', methods=['GET', 'POST'])
 def new_user_registration():
     username = request.form['username']
-
-    is_username_taken = data_manager.check_username_in_database(username)
+    response = requests.get('http://127.0.0.1:8000/users', params={'username': username})
+    is_username_taken = response.json()['result']
     password = request.form['password']
     password_confirm = request.form['confirm_password']
 
@@ -59,7 +62,13 @@ def new_user_registration():
         flash("Username is already taken!")
     else:
         flash("Registration was successful!")
-        data_manager.register_new_user(username,password)
+        requests.post(
+            'http://127.0.0.1:8000/users',
+            data={
+                "username": username,
+                "hashed_password": hash_password(password)
+            }
+        )
     return redirect(url_for('index'))
 
 
@@ -67,8 +76,9 @@ def new_user_registration():
 def log_user_in():
     username = request.form['login_username']
     password = request.form['login_password']
-
-    login_check = data_manager.verify_user(username, password)
+    response = requests.get('http://127.0.0.1:8000/users', params={"username": username}).json()["result"]
+    hashed_pw = response[0]["password"]
+    login_check = verify_password(password, hashed_pw)
 
     if login_check:
         session['username'] = username
@@ -81,6 +91,26 @@ def log_user_in():
 def log_user_out():
     session.pop('username', None)
     return redirect(url_for('index'))
+
+
+def hash_password(plain_text_password):
+    # By using bcrypt, the salt is saved into the hash itself
+    hashed_bytes = bcrypt.hashpw(plain_text_password.encode('utf-8'), bcrypt.gensalt())
+    return hashed_bytes.decode('utf-8')
+
+
+def verify_password(plain_text_password, hashed_password):
+    this_was_hashed = plain_text_password
+    hashed_bytes_password = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(this_was_hashed.encode('utf-8'), hashed_bytes_password)
+
+
+def main():
+    app.run(
+        host="127.0.0.1",
+        port="5000",
+        debug=True
+    )
 
 
 if __name__ == '__main__':
