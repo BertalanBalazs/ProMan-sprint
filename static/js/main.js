@@ -20,11 +20,14 @@ function initTestBtn() {
     const btn = document.getElementById('test-btn');
     btn.addEventListener('click', async function() {
         console.log(await $.ajax({
-            url: 'http://127.0.0.1:8000/statuses',
+            url: 'http://127.0.0.1:8000/cards',
             type: 'POST',
             data: {
+                userId: 1,
+                orderNum: 2,
+                statusId: 1,
                 boardId: 10,
-                title: 'statusssss'
+                title: 'carderinho'
             }
         }))
     })

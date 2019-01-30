@@ -68,4 +68,12 @@ def add_status_to_board(cursor,board_id,status_id):
     WHERE id = %(board_id)s""", {'board_id': board_id,'status_id': status_id})
 
 
+@connection_handler
+def save_new_card(cursor, card_data):
+    cursor.execute("""
+                    INSERT INTO cards (title, board_id, status_id, order_num, user_id)
+                    VALUES (%(title)s, %(boardId)s, %(statusId)s, %(orderNum)s, %(userId)s)
+                    """,
+                   card_data)
+
 

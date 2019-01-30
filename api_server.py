@@ -49,6 +49,17 @@ def new_board(type):
         return jsonify({'done': True, 'message': 'New board added'})
 
 
+@app.route('/cards', methods=['POST'])
+def create_card():
+    card_data = request.form.to_dict()
+    try:
+        data_manager.save_new_card(card_data)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'New card added'})
+
+
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()
