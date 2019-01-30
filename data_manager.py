@@ -45,7 +45,7 @@ def delete_row(cursor, table, criteria):
 
 
 @connection_handler
-def new_status(cursor,title):
+def save_new_status(cursor,title):
     cursor.execute("""
     INSERT INTO statuses (name)
     VALUES (%(title)s)""", {'title': title})
@@ -68,4 +68,11 @@ def add_status_to_board(cursor,board_id,status_id):
     WHERE id = %(board_id)s""", {'board_id': board_id,'status_id': status_id})
 
 
-
+@connection_handler
+def change_status(cursor, new_status):
+    cursor.execute("""
+                    UPDATE cards
+                    SET status_id = %(statusId)s
+                    WHERE id = %(id)s
+                    """,
+                   new_status)
