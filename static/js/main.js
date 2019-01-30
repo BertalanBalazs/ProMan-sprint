@@ -60,7 +60,11 @@ var app = new Vue({
             this.newBoard = null
         },
         addBoard() {
-            this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+             if (this.newBoard) {
+                this.boards.unshift({ title: this.newBoard, id:this.boards.length + 1, columns:[]})
+                this.newBoard = null
+            }
+
         },
         rename(id) {
             this.isEdit = id;
@@ -70,17 +74,12 @@ var app = new Vue({
             if (key === 'Enter' || key === 13) {
                 this.isEdit = 0;
             }
-            if (this.newBoard === 'Arrived on time' || this.newBoard === 'Időben érkezett' ) {
+          },
+        addColumn(board) {
+            if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett' ) {
                $('#modalWarning').modal('show')
                return
-            } else if (this.newBoard) {
-                this.boards.unshift({ title: this.newBoard, id:this.boards.length + 1, columns:[]})
-                this.newBoard = null
-            }
-
-        },
-        addColumn(board) {
-            if (this.newColumn) {
+            }else if (this.newColumn) {
                 board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]})
                 this.newColumn = null
             }

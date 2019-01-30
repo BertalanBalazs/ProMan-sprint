@@ -116,6 +116,9 @@
     <i onclick="playAudio()" id="play" class="fas fa-volume-mute"></i>
     <i onclick="pauseAudio()" id="stop" class="fas fa-volume-up"></i>
 </div>
+
+
+
 {% raw %}
 <div id="app" class="container-fluid" >
 
@@ -172,9 +175,14 @@
     </div>
     <!-- Add new board end -->
 
-    <draggable v-model="boards" @start="drag=true" @end="drag=false">
 
-        <b-card v-for="(board, index) in boards" no-body class="mb-1">
+
+        <!-- Board list -->
+    <div class="row">
+        <div class="col">
+            <b-card v-for="(board, index) in boards" no-body class="mb-1">
+
+                <!-- Board list header-->
             <b-card-header header-tag="header" class="p-1" role="tab">
                 <b-btn v-b-toggle="'id-' + index" block href="#" variant="info" class="span1" contenteditable="false" @dblclick="rename(board.id)" @keypress="handleEnter">
                     <span v-if="isEdit !== board.id">{{ board.title }}</span>
@@ -185,30 +193,6 @@
                     </span>
                 </b-btn>
             </b-card-header>
-            <b-collapse :id="'id-' + index" role="tabpanel">
-                <b-card-body>
-
-
-                    <p class="card-text">
-                        This is the board body of id: {{ board.id }} title: {{ board.title }}
-                    </p>
-                    <div class="container-fluid px-sm-5">
-                        <div class="row mx-sm-n5">
-                            <b-card v-for="column in columns" class="col-sm myColumn">
-                                <b-card-header :header="column" header-tag="header" class="p-1" role="tab">
-                                </b-card-header>
-                                <b-card-body>
-                                </b-card-body>
-                            </b-card>
-    <!-- Board list -->
-    <div class="row">
-        <div class="col">
-            <b-card v-for="(board, index) in boards" no-body class="mb-1">
-
-                <!-- Board list header-->
-                <b-card-header header-tag="header" class="p-1" role="tab">
-                    <b-btn v-b-toggle="'id-' + index" block href="#" variant="info">{{ board.title }}</b-btn>
-                </b-card-header>
 
                 <!-- Board list collapse-->
                 <b-collapse :id="'id-' + index" role="tabpanel">
