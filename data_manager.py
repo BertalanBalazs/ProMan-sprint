@@ -21,8 +21,8 @@ def get_data(cursor, criteria, table):
 @connection_handler
 def new_board(cursor,boardname,userid):
     cursor.execute("""
-    INSERT INTO boards (title,is_active,user_id)
-    VALUES (%(boardname)s, true ,%(userid)s)""",
+    INSERT INTO boards (title,is_active,user_id,status_ids)
+    VALUES (%(boardname)s, true ,%(userid)s,'{}')""",
                    {'boardname': boardname, 'userid': userid})
 
 @connection_handler
@@ -60,11 +60,12 @@ def get_status(cursor,title):
 
 
 @connection_handler
-def add_status_to_board(board_id,status_id):
+def add_status_to_board(cursor,board_id,status_id):
+    status_id = int(status_id)
     cursor.execute("""
     UPDATE boards
-     SET status_ids status_ids || %(status_id)s
-    WHERE id LIKE (%(board_id)s)""", {'board_id': board_id,'status_id': status_id})
+     SET status_ids = status_ids || %(status_id)s
+    WHERE id = %(board_id)s""", {'board_id': board_id,'status_id': status_id})
 
 
 

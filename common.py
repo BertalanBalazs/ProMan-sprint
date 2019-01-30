@@ -24,3 +24,4 @@ def make_db_query(criteria, table):
         return jsonify({"done": False, "reason": "Database error"})
     else:
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
+

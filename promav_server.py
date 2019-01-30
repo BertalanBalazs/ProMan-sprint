@@ -12,7 +12,7 @@ def index():
     ''' this is a one-pager which shows all the boards and cards '''
     if 'username' in session:
         username = {'username': session['username']}
-        return render_template('boards.html', username=username)
+        return render_template('boards.html', username=username,user_id = session.get('userid'))
     return render_template('boards.html')
 
 
@@ -36,13 +36,6 @@ def make_db_query(criteria, getter_function):
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
 
 
-@app.route('newstatus')
-def new_status():
-    status_object = request.form['status']
-    status_title = status_object['title']
-    board_id = request.form['board-id']
-    if not data_manager.get_status(status_title): data_manager.new_status(status_title)
-    data_manager.add_status_to_board(board_id,data_manager.get_status(status_title))
 
 def main():
     app.run(debug=True)
@@ -82,6 +75,7 @@ def log_user_in():
 
     if login_check:
         session['username'] = username
+        session['userid'] = response[0]['id']
     else:
         pass
     return redirect(url_for('index'))

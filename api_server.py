@@ -1,9 +1,13 @@
-from flask import Flask, render_template, request, jsonify, session, redirect, url_for, flash
+from flask import Flask, request, session, jsonify
+from flask_cors import CORS
 import data_manager
 import common
+import logging
 
 app = Flask(__name__)
 app.secret_key = "secret_key"
+CORS(app)
+logging.getLogger('flask_cors').level = logging.DEBUG
 
 
 @app.route('/boards', methods=['GET'])
@@ -32,23 +36,37 @@ def get_status():
 
 @app.route('/boards/<type>', methods=['POST'])
 def new_board(type):
-    if (type == 'public'):
-        make_board(0)
+    userid = request.form['userid']
+    boardtitle = request.form['title']
+
+    if type == 'public':
+        data_manager.new_board(boardtitle, 0)
     else:
-        userid = session.get('username')
-        make_board(userid)
 
+        data_manager.new_board(boardtitle, userid)
 
-def make_board(userid):
-    board_object = request.form['boardname']
-    board_title = board_object['title']
-    data_manager.new_board(board_title, userid)
+    return
+
 
 
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()
     data_manager.register_new_user(data)
+
+
+@app.route('/statuses', methods=['POST'])
+def new_status():
+    status_title = request.form['title']
+    board_id = request.form['boardId']
+
+    board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
+        data_manager.new_status(status_title)
+    status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
+    if status_id not in board_statuses:
+        data_manager.add_status_to_board(board_id, status_id)
+    return jsonify({'a': 'b'})
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])

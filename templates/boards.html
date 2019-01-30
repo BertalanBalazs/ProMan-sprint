@@ -5,7 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>ProMan</title>
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css"
+          integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
@@ -35,12 +36,14 @@
             {% if username is undefined %}
                 {% if not username %}
                     <li class="nav-item">
-                        <a class="nav-link" onclick="document.getElementById('id02').style.display='block'" class="account_btn">
+                        <a class="nav-link" onclick="document.getElementById('id02').style.display='block'"
+                           class="account_btn">
                             Register
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" onclick="document.getElementById('id01').style.display='block'" class="account_btn">
+                        <a class="nav-link" onclick="document.getElementById('id01').style.display='block'"
+                           class="account_btn">
                             Login
                         </a>
                     </li>
@@ -53,8 +56,8 @@
             {% endif %}
         </ul>
         {% if username is defined %}
-            <span class="navbar-text">
-                Hi {{ username.username }}!
+            <span id='showusername' data-username="{{ username }}" data-userid="{{ userid }}" class="navbar-text">
+                Hi {{ username }}!
             </span>
         {% endif %}
     </div>
@@ -70,7 +73,9 @@
                           class="input" placeholder="username" required></p>
                 <p><input id="password" name="login_password" type="password"
                           class="input" placeholder="password" required></p>
-                <p><button type="submit" class="button">Login</button></p>
+                <p>
+                    <button type="submit" class="button">Login</button>
+                </p>
             </div>
         </form>
     </div>
@@ -88,7 +93,9 @@
                           class="input" placeholder="password" required></p>
                 <p><input id="confirm_password" name="confirm_password" type="password"
                           class="input" placeholder="confirm password" required></p>
-                <p><button type="submit" class="button">Register</button></p>
+                <p>
+                    <button type="submit" class="button">Register</button>
+                </p>
             </div>
         </form>
     </div>
@@ -162,8 +169,7 @@
     window.onclick = function (event) {
         if (event.target == modal1) {
             modal1.style.display = "none";
-        }
-        else if (event.target == modal2) {
+        } else if (event.target == modal2) {
             modal2.style.display = "none";
         }
     }

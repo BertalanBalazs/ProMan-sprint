@@ -1,9 +1,7 @@
-
-
 var app = new Vue({
     el: '#app',
-    components:{
-      // draggable
+    components: {
+        // draggable
     },
     data: {
         drag: false,
@@ -12,13 +10,18 @@ var app = new Vue({
     },
     methods: {
         async addBoard() {
+            //const userelement = document.getElementById('showusername');
+          //  const userid = userelement.dataset.userid;
             console.log(await $.ajax({
-                url: 'http://127.0.0.1:5000/cards/4',
-                type: 'DELETE'
-            }))
-        }
-    }
-});
+                url: 'http://127.0.0.1:8000/boards/public',
+                    data: {title: 'afsjldfjaélsdjfk',userid : 0},
+                type: 'POST'
+            })
+)
+}
+}
+})
+;
 
 
 // This function is to initialize the application
