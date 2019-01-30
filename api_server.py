@@ -30,6 +30,21 @@ def get_status():
     return common.make_db_query(criteria, 'statuses')
 
 
+@app.route('/boards/<type>', methods=['POST'])
+def new_board(type):
+    if (type == 'public'):
+        make_board(0)
+    else:
+        userid = session.get('username')
+        make_board(userid)
+
+
+def make_board(userid):
+    board_object = request.form['boardname']
+    board_title = board_object['title']
+    data_manager.new_board(board_title, userid)
+
+
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()

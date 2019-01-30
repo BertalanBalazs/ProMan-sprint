@@ -22,21 +22,6 @@ def get_boards():
     return make_db_query(criteria, data_manager.get_boards)
 
 
-@app.route('/newboard', methods=['POST'])
-def new_public_board():
-    new_board(0)
-
-@app.route('/newprivateboard', methods=['POST'])
-def new_private_board():
-    userid = session.get('username')
-    new_board(userid)
-
-
-def new_board(userid):
-    board_object = request.form['boardname']
-    board_title = board_object['title']
-    data_manager.new_board(board_title, userid)
-
 
 def make_db_query(criteria, getter_function):
     if criteria:
