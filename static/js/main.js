@@ -1,3 +1,5 @@
+
+// Music player
 var x = document.getElementById("myAudio");
 
 function playAudio() {
@@ -25,6 +27,8 @@ var app = new Vue({
         ],
         newBoard: null,
         newColumn: null,
+        isEdit: 0,
+        spans: document.getElementsByClassName("span1"),
         drag: false,
         // boards: sampleData.boards,
 
@@ -56,6 +60,16 @@ var app = new Vue({
             this.newBoard = null
         },
         addBoard() {
+            this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+        },
+        rename(id) {
+            this.isEdit = id;
+        },
+        handleEnter(event) {
+            let key = event.key || event.keyCode;
+            if (key === 'Enter' || key === 13) {
+                this.isEdit = 0;
+            }
             if (this.newBoard === 'Arrived on time' || this.newBoard === 'Időben érkezett' ) {
                $('#modalWarning').modal('show')
                return
