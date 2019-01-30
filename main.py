@@ -21,16 +21,15 @@ def get_boards():
     return make_db_query(criteria, 'boards')
 
 
-def make_db_query(criteria, table):
 @app.route('/boards/<_id>', methods=['DELETE'])
 def delete_board(_id):
-    criteria = {'id': _id}
+    criteria = {'key': 'id', 'value': _id}
     return delete_from_db(criteria, 'boards')
 
 
 @app.route('/cards/<_id>', methods=['DELETE'])
 def delete_card(_id):
-    criteria = {'id': _id}
+    criteria = {'key': 'id', 'value': _id}
     return delete_from_db(criteria, 'cards')
 
 
@@ -42,11 +41,10 @@ def delete_from_db(criteria, table):
     else:
         # if user_id_of_deleted_row == 0:
             # socketio.emit('refresh')
-        return jsonify({"done": True, "message": "Successful delete"})
+        return jsonify({"done": True, "message": "Successful delete", 'user_id': user_id_of_deleted_row})
 
 
-
-def make_db_query(criteria, getter_function):
+def make_db_query(criteria, table):
     if criteria:
         key = list(criteria.keys())[0]
         value = criteria[key]

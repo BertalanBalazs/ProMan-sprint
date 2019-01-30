@@ -13,9 +13,8 @@ var app = new Vue({
     methods: {
         async addBoard() {
             console.log(await $.ajax({
-                url: 'http://127.0.0.1:5000/boards',
-                type: 'DELETE',
-                data: JSON.stringify({data: "sampleData"})
+                url: 'http://127.0.0.1:5000/cards/4',
+                type: 'DELETE'
             }))
         }
     }
