@@ -1,3 +1,5 @@
+
+// Music player
 var x = document.getElementById("myAudio");
 
 function playAudio() {
@@ -13,12 +15,17 @@ function pauseAudio() {
 }
 
 
+
+
+
 var app = new Vue({
     el: '#app',
     components:{
       // draggable
     },
     data: {
+        isEdit: 0,
+        spans: document.getElementsByClassName("span1"),
         drag: false,
         boards: sampleData.boards,
         columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt']
@@ -26,6 +33,15 @@ var app = new Vue({
     methods: {
         addBoard() {
             this.boards.push({ title: 'Board ' + (this.boards.length + 1), id:this.boards.length + 1})
+        },
+        rename(id) {
+            this.isEdit = id;
+        },
+        handleEnter(event) {
+            let key = event.key || event.keyCode;
+            if (key === 'Enter' || key === 13) {
+                this.isEdit = 0;
+            }
         }
     }
 });
