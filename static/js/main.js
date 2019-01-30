@@ -34,13 +34,13 @@ var app = new Vue({
 
         // columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt'],
         boards: [
-            { title: 'MÁV' , columns: [
-                {title: 'El sem indult', cards: [
+            {id: 1, title: 'MÁV' , columns: [
+                {id: 1, title: 'El sem indult', cards: [
                     {title:"John", id:1},
                     {title:"Joao", id:2},
                     {title:"Jean", id:3},
                     {title:"Gerard", id:4} ]},
-                {title: 'Kicsit késik', cards: [
+                {id: 2, title: 'Kicsit késik', cards: [
                     {title:"Juan", id:5},
 				    {title:"Edgard", id:6},
                     ]},
@@ -66,6 +66,9 @@ var app = new Vue({
             }
 
         },
+        deleteBoard(id) {
+            this.boards = _.filter(this.boards,item => item.id !== id)
+          },
         rename(id) {
             this.isEdit = id;
         },
