@@ -71,6 +71,12 @@ def check_username_in_database(cursor, username):
         return True
 
 
-
-
-
+@connection_handler
+def delete_row(cursor, table, criteria):
+    cursor.execute(f"""
+                    DELETE FROM {table}
+                    WHERE id = %(value)s
+                    RETURNING user_id
+                    """,
+                   criteria)
+    return cursor.fetchone()

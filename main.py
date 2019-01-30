@@ -22,6 +22,31 @@ def get_boards():
 
 
 def make_db_query(criteria, table):
+@app.route('/boards/<_id>', methods=['DELETE'])
+def delete_board(_id):
+    criteria = {'id': _id}
+    return delete_from_db(criteria, 'boards')
+
+
+@app.route('/cards/<_id>', methods=['DELETE'])
+def delete_card(_id):
+    criteria = {'id': _id}
+    return delete_from_db(criteria, 'cards')
+
+
+def delete_from_db(criteria, table):
+    try:
+        user_id_of_deleted_row = data_manager.delete_row(table, criteria)["user_id"]
+    except:
+        return jsonify({"done": False, "reason": "Database error"})
+    else:
+        # if user_id_of_deleted_row == 0:
+            # socketio.emit('refresh')
+        return jsonify({"done": True, "message": "Successful delete"})
+
+
+
+def make_db_query(criteria, getter_function):
     if criteria:
         key = list(criteria.keys())[0]
         value = criteria[key]
