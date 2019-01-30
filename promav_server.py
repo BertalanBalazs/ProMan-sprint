@@ -36,7 +36,6 @@ def make_db_query(criteria, getter_function):
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
 
 
-
 def main():
     app.run(debug=True)
 
