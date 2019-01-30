@@ -38,35 +38,43 @@ def get_status():
 def new_board(type):
     userid = request.form['userid']
     boardtitle = request.form['title']
-
-    if type == 'public':
-        data_manager.new_board(boardtitle, 0)
+    try:
+        if type == 'public':
+            data_manager.new_board(boardtitle, 0)
+        else:
+            data_manager.new_board(boardtitle, userid)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
     else:
-
-        data_manager.new_board(boardtitle, userid)
-
-    return
-
+        return jsonify({'done': True, 'message': 'New board added'})
 
 
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()
-    data_manager.register_new_user(data)
+    try:
+        data_manager.register_new_user(data)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'New user added'})
 
 
 @app.route('/statuses', methods=['POST'])
 def new_status():
     status_title = request.form['title']
     board_id = request.form['boardId']
-
     board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
-    if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
-        data_manager.new_status(status_title)
-    status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
-    if status_id not in board_statuses:
-        data_manager.add_status_to_board(board_id, status_id)
-    return jsonify({'a': 'b'})
+    try:
+        if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
+            data_manager.new_status(status_title)
+        status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
+        if status_id not in board_statuses:
+            data_manager.add_status_to_board(board_id, status_id)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'Status added'})
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])
