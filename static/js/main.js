@@ -45,20 +45,22 @@ var app = new Vue({
         ],
         newBoard: null,
         newColumn: null,
-        isEdit: 0,
+        editColumn: -1,
+        editBoard: -1,
+        editCard: -1,
         spans: document.getElementsByClassName("span1"),
         drag: false,
         // boards: sampleData.boards,
 
         // columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt'],
         boards: [
-            { title: 'MÁV' , columns: [
-                {title: 'El sem indult', cards: [
+            {id: 1, title: 'MÁV' , columns: [
+                {id: 1, title: 'El sem indult', cards: [
                     {title:"John", id:1},
                     {title:"Joao", id:2},
                     {title:"Jean", id:3},
                     {title:"Gerard", id:4} ]},
-                {title: 'Kicsit késik', cards: [
+                {id: 2, title: 'Kicsit késik', cards: [
                     {title:"Juan", id:5},
 				    {title:"Edgard", id:6},
                     ]},
@@ -84,13 +86,22 @@ var app = new Vue({
             }
 
         },
-        rename(id) {
-            this.isEdit = id;
+        rename(id,wichdata) {
+            if (wichdata === 'card') {
+                this.editCard = id
+            } else if (wichdata === 'board') {
+                this.editBoard = id
+            } else {
+                this.editColumn = id
+            }
         },
+        deleteBoard(id) {
+            this.boards = _.filter(this.boards,item => item.id !== id)
+          },
         handleEnter(event) {
             let key = event.key || event.keyCode;
             if (key === 'Enter' || key === 13) {
-                this.isEdit = 0;
+                this.editBoard = this.editCard = this.editColumn = 0;
             }
           },
         addColumn(board) {
