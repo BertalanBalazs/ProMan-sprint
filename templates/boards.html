@@ -303,7 +303,7 @@
 
                                         <draggable class="dragArea minH100" v-model="column.cards"
                                                    :options="{group:'people'}" @start="startDrag(column.cards)"
-                                                   @end="endDrag(column.cards)">
+                                                   @end="endDrag(column.cards,board.columns)">
 
                                             <div class="minH100" v-for="card in column.cards"
                                                  :key="column.title + card">

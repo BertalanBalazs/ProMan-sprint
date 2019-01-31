@@ -183,8 +183,9 @@ var app = new Vue({
                 this.newCard[column.id] = null
             }
         },
-        async endDrag(cards) {
+        async endDrag(cards, columns) {
             this.drag = false;
+
             function getdraggedcard(cards) {
                 for (let card of app.columnsBeforeDrag) {
 
@@ -193,17 +194,23 @@ var app = new Vue({
                 ;
                 return false;
             }
+
             let draggedcard = getdraggedcard(cards);
-            let data = await fetch(
-                    `http://127.0.0.1:8000/cards/${draggedcard.id}`,
-                    {
-                        method: 'PATCH',
-                        body: JSON.stringify({ statusId: 8}),
-                        mode: "cors",
-                        headers: {"Content-Type": "application/json"}
+            let newStatusId;
+            for (column of columns) {
+                if (column.cards.includes(draggedcard)) newStatusId = column.id;
                     }
-                );
+            let data = await fetch(
+                `http://127.0.0.1:8000/cards/${draggedcard.id}`,
+                {
+                    method: 'PATCH',
+                    body: JSON.stringify({statusId: newStatusId}),
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
             console.log(draggedcard);
+
 
         },
         async startDrag(cards) {
