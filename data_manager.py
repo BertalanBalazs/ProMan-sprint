@@ -68,4 +68,12 @@ def add_status_to_board(cursor,board_id,status_id):
     WHERE id = %(board_id)s""", {'board_id': board_id,'status_id': status_id})
 
 
+@connection_handler
+def get_status_for_board(cursor, status_ids):
+    cursor.execute("""
+                    SELECT * FROM statuses
+                    WHERE id in %(status_ids)s
+                    """,
+                   {'status_ids': tuple(status_ids)})
+    return cursor.fetchall()
 

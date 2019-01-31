@@ -67,8 +67,8 @@ var app = new Vue({
     created: function() {
         //this.init()
     },
-    mounted: function() {
-        this.init()
+    mounted: async function() {
+        await this.init()
     },
     methods: {
         tester() {
@@ -87,7 +87,7 @@ var app = new Vue({
 
         },
         async deleteBoard(id) {
-            console.log(this.test.responseJSON);
+            console.log(this.test);
             //this.boards = _.filter(this.boards,item => item.id !== id)
           },
         rename(id) {
@@ -108,19 +108,13 @@ var app = new Vue({
                 this.newColumn = null
             }
         },
-        init() {
-            this.loadData();
-            console.log(this.test)
+        async init() {
+            const url = new URL('http://127.0.0.1:8000/boards');
+            url.search = new URLSearchParams({user_id: 0});
+            const data =  await fetch(url).then((response) => response.json());
+            console.log(data);
+            this.test = data.result;
         },
-        loadData() {
-            const url = 'http://127.0.0.1:8000/boards';
-            this.test =  $.ajax({
-                url: url,
-                type: 'GET',
-                params: {id: 0},
-                dataType: 'json'
-            });
-        }
     },
 
     // async mounted () {
