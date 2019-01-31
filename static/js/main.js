@@ -36,13 +36,13 @@ var app = new Vue({
 
         // columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt'],
         boards: [
-            { title: 'MÁV' , columns: [
-                {title: 'El sem indult', id: 1, cards: [
+            {id: 1, title: 'MÁV' , columns: [
+                {id: 1, title: 'El sem indult', cards: [
                     {title:"John", id:1},
                     {title:"Joao", id:2},
                     {title:"Jean", id:3},
                     {title:"Gerard", id:4} ]},
-                {title: 'Kicsit késik', id: 2, cards: [
+                {id: 2, title: 'Kicsit késik', cards: [
                     {title:"Juan", id:5},
 				    {title:"Edgard", id:6},
                     ]},
@@ -69,27 +69,29 @@ var app = new Vue({
 
         },
         rename(id,wichdata) {
-            if(wichdata === 'card'){
+            if (wichdata === 'card') {
                 this.editCard = id
-            } else if(wichdata === 'board') {
+            } else if (wichdata === 'board') {
                 this.editBoard = id
             } else {
                 this.editColumn = id
             }
-
         },
+        deleteBoard(id) {
+            this.boards = _.filter(this.boards,item => item.id !== id)
+          },
         handleEnter(event) {
             let key = event.key || event.keyCode;
             if (key === 'Enter' || key === 13) {
                 this.editBoard = this.editCard = this.editColumn = 0;
             }
-        },
+          },
         addColumn(board) {
             if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett' ) {
-               $('#modalWarning').modal('show');
+               $('#modalWarning').modal('show')
                return
             }else if (this.newColumn) {
-                board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]});
+                board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]})
                 this.newColumn = null
             }
         }
