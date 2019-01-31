@@ -12,7 +12,7 @@ def index():
     ''' this is a one-pager which shows all the boards and cards '''
     if 'username' in session:
         username = {'username': session['username']}
-        return render_template('boards.html', username=username,user_id = session.get('userid'))
+        return render_template('boards.html', username=username, user_id=session.get('userid'))
     return render_template('boards.html')
 
 
@@ -43,16 +43,19 @@ def new_user_registration():
 @app.route('/login', methods=['POST'])
 def log_user_in():
     username = request.form['login_username']
+    login_check = False
     password = request.form['login_password']
     response = requests.get('http://127.0.0.1:8000/users', params={"username": username}).json()["result"]
-    hashed_pw = response[0]["password"]
-    login_check = verify_password(password, hashed_pw)
+    if response:
+        hashed_pw = response[0]["password"]
+        login_check = verify_password(password, hashed_pw)
+
 
     if login_check:
         session['username'] = username
         session['userid'] = response[0]['id']
     else:
-        pass
+        flash("Invalid Username or Password!")
     return redirect(url_for('index'))
 
 
