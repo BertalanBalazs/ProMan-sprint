@@ -27,7 +27,9 @@ var app = new Vue({
         ],
         newBoard: null,
         newColumn: null,
-        isEdit: 0,
+        editColumn: 0,
+        editBoard: 0,
+        editCard: 0,
         spans: document.getElementsByClassName("span1"),
         drag: false,
         // boards: sampleData.boards,
@@ -35,12 +37,12 @@ var app = new Vue({
         // columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt'],
         boards: [
             { title: 'MÁV' , columns: [
-                {title: 'El sem indult', cards: [
+                {title: 'El sem indult', id: 1, cards: [
                     {title:"John", id:1},
                     {title:"Joao", id:2},
                     {title:"Jean", id:3},
                     {title:"Gerard", id:4} ]},
-                {title: 'Kicsit késik', cards: [
+                {title: 'Kicsit késik', id: 2, cards: [
                     {title:"Juan", id:5},
 				    {title:"Edgard", id:6},
                     ]},
@@ -66,21 +68,28 @@ var app = new Vue({
             }
 
         },
-        rename(id) {
-            this.isEdit = id;
+        rename(id,wichdata) {
+            if(wichdata === 'card'){
+                this.editCard = id
+            } else if(wichdata === 'board') {
+                this.editBoard = id
+            } else {
+                this.editColumn = id
+            }
+
         },
         handleEnter(event) {
             let key = event.key || event.keyCode;
             if (key === 'Enter' || key === 13) {
-                this.isEdit = 0;
+                this.editBoard = this.editCard = this.editColumn = 0;
             }
-          },
+        },
         addColumn(board) {
             if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett' ) {
-               $('#modalWarning').modal('show')
+               $('#modalWarning').modal('show');
                return
             }else if (this.newColumn) {
-                board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]})
+                board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]});
                 this.newColumn = null
             }
         }

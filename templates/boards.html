@@ -184,8 +184,8 @@
 
                 <!-- Board list header-->
             <b-card-header header-tag="header" class="p-1" role="tab">
-                <b-btn v-b-toggle="'id-' + index" block href="#" variant="info" class="span1" contenteditable="false" @dblclick="rename(board.id)" @keypress="handleEnter">
-                    <span v-if="isEdit !== board.id">{{ board.title }}</span>
+                <b-btn v-b-toggle="'id-' + index" block href="#" variant="info" class="span1" contenteditable="false" @dblclick="rename(board.id,'board')" @keypress="handleEnter">
+                    <span v-if="editBoard !== board.id">{{ board.title }}</span>
                     <span v-else>
                         <b-form-input v-model="board.title">
                             {{ board.title }}
@@ -235,7 +235,14 @@
                                     <!-- Card content -->
                                     <div class="card-body ">
                                         <!-- Name -->
-                                        <h4 class="card-title white-text">{{ column.title }}</h4>
+                                    <h4 class="card-title white-text" @dblclick="rename(column.id,'column')" @keypress="handleEnter">
+                                        <span v-if="editColumn !== column.id">{{ column.title }}</span>
+                                        <span v-else>
+                                            <b-form-input v-model="column.title">
+                                                {{ column.title }}
+                                            </b-form-input>
+                                        </span>
+                                    </h4>
                                         <hr>
 
                                            <!-- Card of cards -->
@@ -267,8 +274,16 @@ class="rounded float-left"
             alt="">
 
             <a>
-              <p>{{ card.title }}</p>
-
+                <p @dblclick="rename(card.id,'card')" @keypress="handleEnter">
+                    <span v-if="editCard !== card.id">
+                        {{ card.title }}
+                    </span>
+                    <span v-else>
+                        <b-form-input v-model="card.title">
+                            {{ card.title }}
+                        </b-form-input>
+                    </span>
+                </p>
             </a>
 
         </div>
