@@ -141,17 +141,41 @@ var app = new Vue({
                 this.editBoard = this.editCard = this.editColumn = 0;
             }
           },
-        addColumn(board) {
+        async addColumn(board) {
             if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett' ) {
                $('#modalWarning').modal('show')
                return
             }else if (this.newColumn) {
-                board.columns.unshift({ title: this.newColumn, id:board.columns.length + 1, cards:[]})
+                let data = await fetch(
+                     'http://127.0.0.1:8000/statuses',
+                     {
+                         method: 'POST',
+                         body: JSON.stringify({boardId: board.id, title: this.newColumn}),
+                         mode: "cors",
+                         headers: {"Content-Type": "application/json"}
+                     }
+                );
+                board.columns.unshift({ title: this.newColumn, id:data.result, cards:[]})
                 this.newColumn = null
             }
         },
-        addCard(column) {
+        async addCard(boardId, column) {
             if (this.newCard[column.id]) {
+                let data = await fetch(
+                     'http://127.0.0.1:8000/cards',
+                     {
+                         method: 'POST',
+                         body: JSON.stringify({
+                             board_id: boardId,
+                             status_id: column.id,
+                             user_id: this.authenticated ? parseInt(this.authenticated) : 0,
+                            order_num: 0,
+                             title: this.newCard[column.id]
+                         }),
+                         mode: "cors",
+                         headers: {"Content-Type": "application/json"}
+                     }
+                );
                 column.cards.unshift({ title: this.newCard[column.id], id:column.cards + 1})
                 this.newCard[column.id]= null
             }

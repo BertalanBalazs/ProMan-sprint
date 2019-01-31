@@ -85,7 +85,7 @@ def save_new_status():
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:
-        return jsonify({'done': True, 'message': 'Status added'})
+        return jsonify({'done': True, 'message': 'Status added', 'result': status_id})
 
 
 @app.route('/cards/<id_>', methods=['PATCH'])
