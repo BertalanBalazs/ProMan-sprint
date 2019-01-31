@@ -36,22 +36,22 @@ def get_status(board_id):
 
 @app.route('/boards/<type>', methods=['POST'])
 def new_board(type):
-    userid = request.form['userid']
-    boardtitle = request.form['title']
+    userid = request.get_json()['userid']
+    boardtitle = request.get_json()['title']
     try:
         if type == 'public':
-            data_manager.new_board(boardtitle, 0)
+            board_id = data_manager.new_board(boardtitle, 0)['id']
         else:
-            data_manager.new_board(boardtitle, userid)
+            board_id = data_manager.new_board(boardtitle, userid)['id']
     except:
-        return jsonify({'done': False, 'message': 'Database error'})
+        return jsonify({'done': False, 'message': 'Database error', 'result': board_id})
     else:
-        return jsonify({'done': True, 'message': 'New board added'})
+        return jsonify({'done': True, 'message': 'New board added', 'result': board_id})
 
 
 @app.route('/cards', methods=['POST'])
 def create_card():
-    card_data = request.form.to_dict()
+    card_data = request.get_json()
     try:
         data_manager.save_new_card(card_data)
     except:
@@ -62,7 +62,7 @@ def create_card():
 
 @app.route('/users', methods=['POST'])
 def add_new_user():
-    data = request.form.to_dict()
+    data = request.get_json()
     try:
         data_manager.register_new_user(data)
     except:
@@ -73,8 +73,8 @@ def add_new_user():
 
 @app.route('/statuses', methods=['POST'])
 def save_new_status():
-    status_title = request.form['title']
-    board_id = request.form['boardId']
+    status_title = request.get_json()['title']
+    board_id = request.get_json()['boardId']
     board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
     try:
         if not data_manager.get_data({'key': 'title', 'value': status_title}, 'statuses'):
@@ -90,7 +90,7 @@ def save_new_status():
 
 @app.route('/cards/<id_>', methods=['PATCH'])
 def change_status(id_):
-    new_status = request.form.to_dict()
+    new_status = request.get_json()
     new_status['id'] = id_
     try:
         data_manager.change_status(new_status)

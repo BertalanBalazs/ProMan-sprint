@@ -22,8 +22,10 @@ def get_data(cursor, criteria, table):
 def new_board(cursor,boardname,userid):
     cursor.execute("""
     INSERT INTO boards (title,is_active,user_id,status_ids)
-    VALUES (%(boardname)s, true ,%(userid)s,'{}')""",
+    VALUES (%(boardname)s, true ,%(userid)s,'{}')
+    RETURNING id as id""",
                    {'boardname': boardname, 'userid': userid})
+    return cursor.fetchone()
 
 @connection_handler
 def register_new_user(cursor, user_data):

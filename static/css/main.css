@@ -89,3 +89,6 @@ input{
   max-height: 150px;
   max-width: 150px;
 }
+.minH100 {
+    min-height: 100px;
+}

@@ -73,8 +73,8 @@
             {% endif %}
         </ul>
         {% if username is defined %}
-            <span id='showusername' data-username="{{ username }}" data-userid="{{ userid }}" class="navbar-text">
-                Hi {{ username }}!
+            <span id='showusername' data-username="{{ username.username }}" data-userid="{{ user_id }}" class="navbar-text">
+                Hi {{ username.username }}!
             </span>
         {% endif %}
     </div>
@@ -169,8 +169,11 @@
     <!-- Add new board start -->
     <div class="row">
         <div class="col-auto">
-            <b-button @click="addBoard">
-                Add boards
+            <b-button @click="addBoardPublic">
+                Add public board
+            </b-button>
+            <b-button @click="addBoardPrivate" v-if="authenticated">
+                Add private board
             </b-button>
         </div>
         <div class="md-form">
@@ -299,9 +302,9 @@
 <!-- DO NOT DELETE end -->
 
 
-                                             <draggable class="dragArea"  v-model="column.cards" :options="{group:'people'}" @start="drag=true" @end="drag=false" >
+                                             <draggable class="dragArea minH100"  v-model="column.cards" :options="{group:'people'}" @start="drag=true" @end="drag=false" >
 
-                                                    <div v-for="card in column.cards" :key="column.title + card">
+                                                    <div class="minH100" v-for="card in column.cards" :key="column.title + card">
 
 
           <!-- Collection card -->

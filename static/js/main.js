@@ -16,10 +16,12 @@ function pauseAudio() {
 
 var app = new Vue({
     el: '#app',
+    authenticated: false,
     components:{
       // draggable
     },
     data: {
+        allBoard: [],
         list1:[],
 		list2:[{name:"Juan", id:5},
 				{name:"Edgard", id:6},
@@ -33,46 +35,90 @@ var app = new Vue({
         editCard: -1,
         spans: document.getElementsByClassName("span1"),
         drag: false,
+        authenticated: null,
         // boards: sampleData.boards,
 
         // columns: ['El sem indult', 'Kicsit késik', 'Sokat késik', 'Eltűnt'],
-        boards: [
-            {id: 1, title: 'MÁV' , columns: [
-                {id: 1, title: 'El sem indult', cards: [
-                    {title:"Thomas", id:1, image:"https://d2eixtdner5dzd.cloudfront.net/cache/cf/08/cf0811580c772f9c26e34cbaca3ab78b.png"},
-                    {title:"James", id:2, image:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScAC8xZf1wlij4vruLWlsLMb50UfRZf2ES2CRQmwymh4Z3b2tyWQ"},
-                    {title:"Jean", id:3},
-                    {title:"Gerard", id:4} ]},
-                {id: 2, title: 'Kicsit késik', cards: [
-                    {title:"Juan", id:5},
-				    {title:"Edgard", id:6},
-                    ]},
 
-                ]
-            }
-        ],
         columns: [
             {title: 'El sem indult', cards: ['Thomas', 'Rosie', 'Edward', 'Henry', 'Gordon', 'James']},
         ],
         // cards: ['Thomas', 'Rosie', 'Edward', 'Henry', 'Gordon', 'James']
     },
+    computed: {
+        boards () {
+            let boards = _.filter(this.allBoard, {user_id: 0})
+            if (this.authenticated) {
+                const user = document.getElementById('showusername')
+
+                let userBoards = _.filter(this.allBoard, {user_id: _.toNumber(user.dataset.userid)})
+                console.log(userBoards)
+                return [...boards, ...userBoards]
+            } else return boards
+        }
+    },
     methods: {
         async selectBoard(board) {
+            document.getElementById('play').style.display='none';
+            document.getElementById('stop').style.display='block';
+            x.play();
+            const user = document.getElementById('showusername')
+            if (user && user.dataset) {this.authenticated = (user.dataset.userid)}
+
+
             let newBoard = _.cloneDeep(board)
             console.log('board')
-            const data = await fetch(`http://127.0.0.1:8000/statuses/${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
+            let columns = await fetch(`http://127.0.0.1:8000/statuses/${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
             .then((response) => response.json())
-            console.log(data)
-            board.columns = data.result
+            columns = columns.result
+             let cards = await fetch(`http://127.0.0.1:8000/cards?board_id=${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
+            .then((response) => response.json())
+            cards = cards.result
+            console.log(cards)
+            for (let column of columns) {
+                column.cards = _.filter(cards, {status_id: column.id})
+                if (_.isEmpty(column.cards)) column.cards = []
+            }
+            console.log(columns)
+            board.columns = columns
+
         },
         closeModalWarning() {
             console.log('close')
             $('#modalWarning').modal('hide')
             this.newBoard = null
         },
-        addBoard() {
+        async addBoardPublic() {
              if (this.newBoard) {
-                this.boards.unshift({ title: this.newBoard, id:this.boards.length + 1, columns:[]})
+                 let data = await fetch(
+                     'http://127.0.0.1:8000/boards/public',
+                     {
+                         method: 'POST',
+                         body: JSON.stringify({userid: this.authenticated, title: this.newBoard}),
+                         mode: "cors",
+                         headers: {"Content-Type": "application/json"}
+                     }
+                )
+                .then((response) => response.json())
+
+                this.boards.unshift({ title: this.newBoard, id:data.result, columns:[]})
+                this.newBoard = null
+            }
+
+        },
+        async addBoardPrivate() {
+             if (this.newBoard) {
+                 let data = await fetch(
+                     'http://127.0.0.1:8000/boards/private',
+                     {
+                         method: 'POST',
+                         body: JSON.stringify({userid: this.authenticated, title: this.newBoard}),
+                         mode: "cors",
+                         headers: {"Content-Type": "application/json"}
+                     }
+                )
+                .then((response) => response.json())
+                this.boards.unshift({ title: this.newBoard, id:data.result, columns:[]})
                 this.newBoard = null
             }
 
@@ -118,7 +164,9 @@ var app = new Vue({
          for (const item of data2) {
             item.columns = []
         }
-        this.boards = data2
+        this.allBoard = data2
+        const user = document.getElementById('showusername')
+        if (user && user.dataset) {this.authenticated = (user.dataset.userid)}
 
         /*// parse JSON format into JS object
         .then((data) => {
