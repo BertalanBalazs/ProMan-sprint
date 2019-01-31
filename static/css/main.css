@@ -84,3 +84,8 @@ input{
   from {transform: scale(0)}
   to {transform: scale(1)}
 }
+
+.card img {
+  max-height: 150px;
+  max-width: 150px;
+}
