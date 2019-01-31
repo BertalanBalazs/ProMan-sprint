@@ -60,7 +60,7 @@ var app = new Vue({
         async selectBoard(board) {
             let newBoard = _.cloneDeep(board)
             console.log('board')
-            const data = await fetch('http://127.0.0.1:8000/statuses')  // set the path; the method is GET by default, but can be modified with a second parameter
+            const data = await fetch(`http://127.0.0.1:8000/statuses/${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
             .then((response) => response.json())
             console.log(data)
             board.columns = data.result

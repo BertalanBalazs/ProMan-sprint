@@ -77,9 +77,9 @@ def save_new_status():
     board_id = request.form['boardId']
     board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
     try:
-        if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
+        if not data_manager.get_data({'key': 'title', 'value': status_title}, 'statuses'):
             data_manager.save_new_status(status_title)
-        status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
+        status_id = data_manager.get_data({'key': 'title', 'value': status_title}, 'statuses')[0]['id']
         if status_id not in board_statuses:
             data_manager.add_status_to_board(board_id, status_id)
     except:
