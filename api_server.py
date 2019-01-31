@@ -28,45 +28,76 @@ def get_user():
     return common.make_db_query(criteria, 'users')
 
 
-@app.route('/statuses', methods=['GET'])
-def get_status():
-    criteria = request.args.to_dict()
-    return common.make_db_query(criteria, 'statuses')
+@app.route('/statuses/<board_id>', methods=['GET'])
+def get_status(board_id):
+    statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    return jsonify({'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
 
 
 @app.route('/boards/<type>', methods=['POST'])
 def new_board(type):
     userid = request.form['userid']
     boardtitle = request.form['title']
-
-    if type == 'public':
-        data_manager.new_board(boardtitle, 0)
+    try:
+        if type == 'public':
+            data_manager.new_board(boardtitle, 0)
+        else:
+            data_manager.new_board(boardtitle, userid)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
     else:
+        return jsonify({'done': True, 'message': 'New board added'})
 
-        data_manager.new_board(boardtitle, userid)
 
-    return
-
+@app.route('/cards', methods=['POST'])
+def create_card():
+    card_data = request.form.to_dict()
+    try:
+        data_manager.save_new_card(card_data)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'New card added'})
 
 
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()
-    data_manager.register_new_user(data)
+    try:
+        data_manager.register_new_user(data)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'New user added'})
 
 
 @app.route('/statuses', methods=['POST'])
-def new_status():
+def save_new_status():
     status_title = request.form['title']
     board_id = request.form['boardId']
-
     board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
-    if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
-        data_manager.new_status(status_title)
-    status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
-    if status_id not in board_statuses:
-        data_manager.add_status_to_board(board_id, status_id)
-    return jsonify({'a': 'b'})
+    try:
+        if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
+            data_manager.save_new_status(status_title)
+        status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
+        if status_id not in board_statuses:
+            data_manager.add_status_to_board(board_id, status_id)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'Status added'})
+
+
+@app.route('/cards/<id_>', methods=['PATCH'])
+def change_status(id_):
+    new_status = request.form.to_dict()
+    new_status['id'] = id_
+    try:
+        data_manager.change_status(new_status)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'Status changed'})
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])

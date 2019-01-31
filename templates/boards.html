@@ -34,17 +34,17 @@
     <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
     <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
     <!-- CDNJS :: JQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.3.1.min.js" defer></script>
 
     <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
-
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
     <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
 
     <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+
 
 <nav class="navbar navbar-expand-lg navbar-dark primary-color">
 <a class="navbar-brand" href="#">ProMáv</a>
@@ -247,7 +247,14 @@
                                     <!-- Card content -->
                                     <div class="card-body ">
                                         <!-- Name -->
-                                        <h4 class="card-title white-text">{{ column.title }}</h4>
+                                    <h4 class="card-title white-text" @dblclick="rename(column.id,'column')" @keypress="handleEnter">
+                                        <span v-if="editColumn !== column.id">{{ column.title }}</span>
+                                        <span v-else>
+                                            <b-form-input v-model="column.title">
+                                                {{ column.title }}
+                                            </b-form-input>
+                                        </span>
+                                    </h4>
                                         <hr>
 
 
@@ -305,8 +312,16 @@
           <img v-else="card.image" src="https://lightwidget.com/widgets/empty-photo.jpg" class="rounded float-left" alt="">
 
             <a>
-              <p>{{ card.title }}</p>
-
+                <p @dblclick="rename(card.id,'card')" @keypress="handleEnter">
+                    <span v-if="editCard !== card.id">
+                        {{ card.title }}
+                    </span>
+                    <span v-else>
+                        <b-form-input v-model="card.title">
+                            {{ card.title }}
+                        </b-form-input>
+                    </span>
+                </p>
             </a>
 
         </div>

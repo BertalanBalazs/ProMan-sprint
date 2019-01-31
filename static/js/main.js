@@ -14,7 +14,6 @@ function pauseAudio() {
     x.pause();
 }
 
-
 var app = new Vue({
     el: '#app',
     components:{
@@ -29,6 +28,9 @@ var app = new Vue({
         newColumn: null,
         newCard: {},
         isEdit: 0,
+        editColumn: -1,
+        editBoard: -1,
+        editCard: -1,
         spans: document.getElementsByClassName("span1"),
         drag: false,
         // boards: sampleData.boards,
@@ -75,16 +77,22 @@ var app = new Vue({
             }
 
         },
+        rename(id,wichdata) {
+            if (wichdata === 'card') {
+                this.editCard = id
+            } else if (wichdata === 'board') {
+                this.editBoard = id
+            } else {
+                this.editColumn = id
+            }
+        },
         deleteBoard(id) {
             this.boards = _.filter(this.boards,item => item.id !== id)
           },
-        rename(id) {
-            this.isEdit = id;
-        },
         handleEnter(event) {
             let key = event.key || event.keyCode;
             if (key === 'Enter' || key === 13) {
-                this.isEdit = 0;
+                this.editBoard = this.editCard = this.editColumn = 0;
             }
           },
         addColumn(board) {
