@@ -14,6 +14,17 @@ function pauseAudio() {
     x.pause();
 }
 
+function calap(http, vue) {
+    if (http.readyState === 4) {
+        vue.test = JSON.parse(http.response);
+        console.log(vue)
+    }
+}
+
+function calap2(resp, vue) {
+    vue.test2 = resp
+}
+
 
 var app = new Vue({
     el: '#app',
@@ -53,7 +64,16 @@ var app = new Vue({
         ],
         // cards: ['Thomas', 'Rosie', 'Edward', 'Henry', 'Gordon', 'James']
     },
+    created: function() {
+        //this.init()
+    },
+    mounted: function() {
+        this.init()
+    },
     methods: {
+        tester() {
+          alert('hue')
+        },
         closeModalWarning() {
             console.log('close')
             $('#modalWarning').modal('hide')
@@ -66,8 +86,9 @@ var app = new Vue({
             }
 
         },
-        deleteBoard(id) {
-            this.boards = _.filter(this.boards,item => item.id !== id)
+        async deleteBoard(id) {
+            console.log(this.test.responseJSON);
+            //this.boards = _.filter(this.boards,item => item.id !== id)
           },
         rename(id) {
             this.isEdit = id;
@@ -86,18 +107,32 @@ var app = new Vue({
                 board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]})
                 this.newColumn = null
             }
+        },
+        init() {
+            this.loadData();
+            console.log(this.test)
+        },
+        loadData() {
+            const url = 'http://127.0.0.1:8000/boards';
+            this.test =  $.ajax({
+                url: url,
+                type: 'GET',
+                params: {id: 0},
+                dataType: 'json'
+            });
         }
     },
-    async mounted () {
-        const data = await fetch('/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-        .then((response) => response.json())
+
+    // async mounted () {
+        // const data = await fetch('/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+        // .then((response) => response.json())
         // this.boards = data.result
 
         /*// parse JSON format into JS object
         .then((data) => {
             this.boards = data.result;
         })*/
-    }
+    // }
 });
 
 
