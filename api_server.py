@@ -1,5 +1,6 @@
 from flask import Flask, request, session, jsonify
 from flask_cors import CORS
+from flask_socketio import SocketIO, send, emit
 import data_manager
 import common
 import logging
@@ -7,6 +8,7 @@ import logging
 app = Flask(__name__)
 app.secret_key = "secret_key"
 CORS(app)
+socketio = SocketIO(app)
 logging.getLogger('flask_cors').level = logging.DEBUG
 
 
@@ -105,6 +107,7 @@ def change_status(id_):
 
 @app.route('/boards/<_id>', methods=['DELETE'])
 def delete_board(_id):
+    socketio.emit('database-change', {'test': 'test'})
     criteria = {'key': 'id', 'value': _id}
     return common.delete_from_db(criteria, 'boards')
 
@@ -116,7 +119,8 @@ def delete_card(_id):
 
 
 def main():
-    app.run(
+    socketio.run(
+        app,
         host="127.0.0.1",
         port="8000",
         debug=True

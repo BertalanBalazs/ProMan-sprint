@@ -13,6 +13,20 @@ function pauseAudio() {
     document.getElementById('play').style.display = 'block';
     x.pause();
 }
+const socket = io.connect('http://localhost:8000');
+    socket.on('database-change', async function() {
+        let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+            .then((response) => response.json())
+        let data2 = data.result
+        for (const item of data2) {
+            item.columns = []
+        }
+        app.allBoard = data2
+        const user = document.getElementById('showusername')
+        if (user && user.dataset) {
+            app.authenticated = (user.dataset.userid)
+        }
+    });
 
 var app = new Vue({
     el: '#app',
