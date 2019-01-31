@@ -40,10 +40,8 @@ def delete_row(cursor, table, criteria):
     cursor.execute(f"""
                     DELETE FROM {table}
                     WHERE id = %(value)s
-                    RETURNING user_id
                     """,
                    criteria)
-    return cursor.fetchone()
 
 
 @connection_handler

@@ -31,7 +31,10 @@ def get_user():
 @app.route('/statuses/<board_id>', methods=['GET'])
 def get_status(board_id):
     statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
-    return jsonify({'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
+    if statuses:
+        return jsonify({'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
+    else:
+        return jsonify({'done': True, 'message': 'Successful query', 'result': {}})
 
 
 @app.route('/boards/<type>', methods=['POST'])

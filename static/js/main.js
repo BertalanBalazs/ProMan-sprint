@@ -78,9 +78,11 @@ var app = new Vue({
                 .then((response) => response.json())
             cards = cards.result
             console.log(cards)
-            for (let column of columns) {
-                column.cards = _.filter(cards, {status_id: column.id})
-                if (_.isEmpty(column.cards)) column.cards = []
+            if (columns.length > 0) {
+                for (let column of columns) {
+                    column.cards = _.filter(cards, {status_id: column.id})
+                    if (_.isEmpty(column.cards)) column.cards = []
+                }
             }
             console.log(columns)
             board.columns = columns
@@ -92,7 +94,7 @@ var app = new Vue({
             this.newBoard = null
         },
         async addBoardPublic() {
-            if (this.newdrag = falseBoard) {
+            if (this.newBoard) {
                 let data = await fetch(
                     'http://127.0.0.1:8000/boards/public',
                     {
@@ -135,7 +137,15 @@ var app = new Vue({
                 this.editColumn = id
             }
         },
-        deleteBoard(id) {
+        async deleteBoard(id) {
+            await fetch(
+                `http://127.0.0.1:8000/boards/${id}`,
+                {
+                    method: 'DELETE',
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
             this.boards = _.filter(this.boards, item => item.id !== id)
         },
         handleEnter(event) {

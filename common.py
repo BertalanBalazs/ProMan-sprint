@@ -4,13 +4,13 @@ import data_manager
 
 def delete_from_db(criteria, table):
     try:
-        user_id_of_deleted_row = data_manager.delete_row(table, criteria)["user_id"]
+        data_manager.delete_row(table, criteria)
     except:
         return jsonify({"done": False, "reason": "Database error"})
     else:
         # if user_id_of_deleted_row == 0:
             # socketio.emit('refresh')
-        return jsonify({"done": True, "message": "Successful delete", 'user_id': user_id_of_deleted_row})
+        return jsonify({"done": True, "message": "Successful delete", 'user_id': criteria['value']})
 
 
 def make_db_query(criteria, table):
