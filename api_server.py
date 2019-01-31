@@ -91,7 +91,7 @@ def save_new_status():
 @app.route('/cards/<id_>', methods=['PATCH'])
 def change_status(id_):
     new_status = request.get_json()
-    new_status['id'] = id_
+    new_status['id'] = int(id_)
     try:
         data_manager.change_status(new_status)
     except:
