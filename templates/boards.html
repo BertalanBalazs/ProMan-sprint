@@ -10,44 +10,50 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
 
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
-  <!-- Bootstrap core CSS -->
-     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.1/css/all.css">
+    <!-- Bootstrap core CSS -->
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap/dist/css/bootstrap.min.css"/>
     <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"/>
-  <!-- Material Design Bootstrap -->
+    <!-- Material Design Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/mdb.min.css') }}">
 
-      <!-- Your custom styles (optional) -->
+    <!-- Your custom styles (optional) -->
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/main.css') }}">
 
 
 </head>
 <body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous" defer></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js" integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous" defer></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js" integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous" defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.11/lodash.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"
+        defer></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.6/umd/popper.min.js"
+        integrity="sha384-wHAiFfRlMFy6i5SRaxvfOCifBUQy1xHdJ/yoi7FRNXMRBu5WHdZYu1hA6ZOblgut" crossorigin="anonymous"
+        defer></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/js/bootstrap.min.js"
+        integrity="sha384-B0UglyR+jN6CkvvICOB2joaf5I4l3gm9GU6Hc1og6Ls7i6U/mkkaduKaBhlAXv9k" crossorigin="anonymous"
+        defer></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
-    <!-- CDNJS :: Sortable (https://cdnjs.com/) -->
-    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js" defer></script>
-    <!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
-    <script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
-    <!-- CDNJS :: JQuery -->
-    <script src="https://code.jquery.com/jquery-3.3.1.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.5.22/dist/vue.js" defer></script>
+<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+<script src="//cdn.jsdelivr.net/npm/sortablejs@1.7.0/Sortable.min.js" defer></script>
+<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.17.0/vuedraggable.min.js" defer></script>
+<!-- CDNJS :: JQuery -->
+<script src="https://code.jquery.com/jquery-3.3.1.min.js" defer></script>
 
-    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
-    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+<script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
+<script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
+<script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
-    <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
 
-    <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
 
 
 <nav class="navbar navbar-expand-lg navbar-dark primary-color">
-<a class="navbar-brand" href="#">ProMáv</a>
+    <a class="navbar-brand" href="#">ProMáv</a>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
             {% if username is undefined %}
@@ -73,7 +79,8 @@
             {% endif %}
         </ul>
         {% if username is defined %}
-            <span id='showusername' data-username="{{ username.username }}" data-userid="{{ user_id }}" class="navbar-text">
+            <span id='showusername' data-username="{{ username.username }}" data-userid="{{ user_id }}"
+                  class="navbar-text">
                 Hi {{ username.username }}!
             </span>
         {% endif %}
@@ -127,43 +134,39 @@
 </div>
 
 
-
 {% raw %}
-<div id="app" class="container-fluid" >
+<div id="app" class="container-fluid">
 
- <!-- WARNING MODAL  -->
-<div class="modal fade" id="modalWarning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-  aria-hidden="true">
-  <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
-    <!--Content-->
-    <div class="modal-content text-center">
-      <!--Header-->
-      <div class="modal-header d-flex justify-content-center">
-        <p class="heading">DANGER!!!</p>
-      </div>
+    <!-- WARNING MODAL  -->
+    <div class="modal fade" id="modalWarning" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-sm modal-notify modal-danger" role="document">
+            <!--Content-->
+            <div class="modal-content text-center">
+                <!--Header-->
+                <div class="modal-header d-flex justify-content-center">
+                    <p class="heading">DANGER!!!</p>
+                </div>
 
-      <!--Body-->
-      <div class="modal-body">
+                <!--Body-->
+                <div class="modal-body">
 
-        <i class="fas fa-times fa-4x animated rotateIn"></i>
-          <h1>Please do not use fake category!!!!</h1>
+                    <i class="fas fa-times fa-4x animated rotateIn"></i>
+                    <h1>Please do not use fake category!!!!</h1>
 
-      </div>
+                </div>
 
-      <!--Footer-->
-      <div @click="closeModalWarning" class="modal-footer flex-center">
-        <b-button  class="btn  btn-outline-danger">Ok</b-button>
+                <!--Footer-->
+                <div @click="closeModalWarning" class="modal-footer flex-center">
+                    <b-button class="btn  btn-outline-danger">Ok</b-button>
 
 
-      </div>
+                </div>
+            </div>
+            <!--/.Content-->
+        </div>
     </div>
-    <!--/.Content-->
-  </div>
-</div>
-<!-- WARNING MODAL  -->
-
-
-
+    <!-- WARNING MODAL  -->
 
 
     <!-- Add new board start -->
@@ -179,8 +182,8 @@
         <div class="md-form">
             <div class="col">
                 <b-form-input v-model="newBoard"
-                  type="text"
-                  placeholder="Enter new board" >
+                              type="text"
+                              placeholder="Enter new board">
                 </b-form-input>
             </div>
         </div>
@@ -188,23 +191,23 @@
     <!-- Add new board end -->
 
 
-
-        <!-- Board list -->
+    <!-- Board list -->
     <div class="row">
         <div class="col">
             <b-card v-for="(board, index) in boards" no-body class="mb-1">
 
                 <!-- Board list header-->
-            <b-card-header @click="selectBoard(board)" header-tag="header" class="p-1" role="tab">
-                <b-btn v-b-toggle="'id-' + index" block href="#" variant="info" class="span1" contenteditable="false"  @dblclick="rename(board.id)" @keypress="handleEnter" >
-                    <span v-if="isEdit !== board.id">{{ board.title }}</span>
-                    <span v-else>
+                <b-card-header @click="selectBoard(board)" header-tag="header" class="p-1" role="tab">
+                    <b-btn v-b-toggle="'id-' + index" block href="#" variant="info" class="span1"
+                           contenteditable="false" @dblclick="rename(board.id)" @keypress="handleEnter">
+                        <span v-if="isEdit !== board.id">{{ board.title }}</span>
+                        <span v-else>
                         <b-form-input v-model="board.title">
                             {{ board.title }}
                         </b-form-input>
                     </span>
-                </b-btn>
-            </b-card-header>
+                    </b-btn>
+                </b-card-header>
 
                 <!-- Board list collapse-->
                 <b-collapse :id="'id-' + index" role="tabpanel">
@@ -216,7 +219,8 @@
                         <div class="row">
                             <div class="col-auto">
 
-                                    <a @click="deleteBoard(board.id)"  class="btn-floating btn-lg young-passion-gradient"><i class="fas fa-trash-alt"></i></a>
+                                <a @click="deleteBoard(board.id)" class="btn-floating btn-lg young-passion-gradient"><i
+                                        class="fas fa-trash-alt"></i></a>
 
                                 <b-button @click="addColumn(board)">
                                     Add
@@ -225,8 +229,8 @@
                             <div class="md-form">
                                 <div class="col">
                                     <b-form-input v-model="newColumn"
-                                      type="text"
-                                      placeholder="Enter new column" >
+                                                  type="text"
+                                                  placeholder="Enter new column">
                                     </b-form-input>
                                 </div>
                             </div>
@@ -236,35 +240,36 @@
                         <div class="container-fluid ">
                             <div class="card-deck">
                                 <!-- Columns-->
-                                <div v-for="column in board.columns" class="card testimonial-card sm-3 orange accent-2 ">
-                                   <!-- Background color -->
+                                <div v-for="column in board.columns"
+                                     class="card testimonial-card sm-3 orange accent-2 ">
+                                    <!-- Background color -->
                                     <div class="card-up deep-purple darken-4">
                                     </div>
 
 
                                     <!-- Avatar MÁV embléma-->
                                     <div class="avatar mx-auto ">
-                                      <img src="data:image/png;base64,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"
-                                           class="rounded-circle" alt="woman avatar">
+                                        <img src="data:image/png;base64,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"
+                                             class="rounded-circle" alt="woman avatar">
                                     </div>
                                     <!-- Card content -->
                                     <div class="card-body ">
                                         <!-- Name -->
-                                    <h4 class="card-title white-text" @dblclick="rename(column.id,'column')" @keypress="handleEnter">
-                                        <span v-if="editColumn !== column.id">{{ column.title }}</span>
-                                        <span v-else>
+                                        <h4 class="card-title white-text" @dblclick="rename(column.id,'column')"
+                                            @keypress="handleEnter">
+                                            <span v-if="editColumn !== column.id">{{ column.title }}</span>
+                                            <span v-else>
                                             <b-form-input v-model="column.title">
                                                 {{ column.title }}
                                             </b-form-input>
                                         </span>
-                                    </h4>
+                                        </h4>
                                         <hr>
 
 
                                         <!-- Add new card start -->
                                         <div class="row">
                                             <div class="col-auto">
-
 
 
                                                 <b-button @click="addCard(board.id, column)">
@@ -274,8 +279,8 @@
                                             <div class="md-form">
                                                 <div class="col">
                                                     <b-form-input v-model="newCard[column.id]"
-                                                      type="text"
-                                                      placeholder="Enter new card" >
+                                                                  type="text"
+                                                                  placeholder="Enter new card">
                                                     </b-form-input>
                                                 </div>
                                             </div>
@@ -283,82 +288,79 @@
                                         <!-- Add new card end -->
 
 
+                                        <!-- Card of cards -->
+
+                                        <!-- DO NOT DELETE start -->
+                                        <div class="drag">
+                                            <draggable class="dragArea" v-model="list1" :options="{group:'people'}">
+                                                <div v-for="(element, index) in list1">
+                                                    {{element.name}} {{index}}
+                                                </div>
+                                            </draggable>
+
+                                        </div>
+                                        <!-- DO NOT DELETE end -->
+
+                                        <div class="dragArea minH100" v-for="fakerCard in column.cards">
+                                        <draggable class="dragArea minH100" v-model="column.cards"
+                                                   :options="{group:'people'}" @start="drag=true"
+                                                   @end="endDrag(fakerCard)">
+
+                                            <div class="minH100" v-for="card in column.cards"
+                                                 :key="column.title + card">
 
 
+                                                <!-- Collection card -->
+                                                <div class="card collection-card ">
+                                                    <!-- Card image -->
+                                                    <div class="view zoom">
+                                                        <img v-if="card.image" :src="card.image"
+                                                             class="rounded float-left" alt="">
+                                                        <img v-else="card.image"
+                                                             src="https://lightwidget.com/widgets/empty-photo.jpg"
+                                                             class="rounded float-left" alt="">
 
-
-
-                                           <!-- Card of cards -->
-
-<!-- DO NOT DELETE start -->
-<div class="drag">
-<draggable class="dragArea" v-model="list1" :options="{group:'people'}" >
-    <div v-for="(element, index) in list1"  >
-        {{element.name}} {{index}}
-    </div>
- </draggable>
-
-</div>
-<!-- DO NOT DELETE end -->
-
-
-                                             <draggable class="dragArea minH100"  v-model="column.cards" :options="{group:'people'}" @start="drag=true" @end="drag=false" >
-
-                                                    <div class="minH100" v-for="card in column.cards" :key="column.title + card">
-
-
-          <!-- Collection card -->
-      <div class="card collection-card ">
-        <!-- Card image -->
-        <div class="view zoom">
-          <img v-if="card.image" :src="card.image" class="rounded float-left" alt="">
-          <img v-else="card.image" src="https://lightwidget.com/widgets/empty-photo.jpg" class="rounded float-left" alt="">
-
-            <a>
-                <p @dblclick="rename(card.id,'card')" @keypress="handleEnter">
+                                                        <a>
+                                                            <p @dblclick="rename(card.id,'card')"
+                                                               @keypress="handleEnter">
                     <span v-if="editCard !== card.id">
                         {{ card.title }}
                     </span>
-                    <span v-else>
+                                                                <span v-else>
                         <b-form-input v-model="card.title">
                             {{ card.title }}
                         </b-form-input>
                     </span>
-                </p>
-            </a>
-
-        </div>
-        <!-- Card image -->
-      </div>
-      <!-- Collection card -->
-                                                        <br>
-
-
-
-
-
+                                                            </p>
+                                                        </a>
 
                                                     </div>
+                                                    <!-- Card image -->
+                                                </div>
+                                                <!-- Collection card -->
+                                                <br>
 
-                                            </draggable>
 
+                                            </div>
+
+                                        </draggable>
                                     </div>
-
+                                    </div>
 
 
                                 </div>
 
                             </div>
                         </div>
-                </b-card-body>
+                    </b-card-body>
 
 
-            </b-collapse>
-        </b-card>
+                </b-collapse>
+            </b-card>
 
 
+        </div>
     </div>
-</div>
 
 </div>
 {% endraw %}

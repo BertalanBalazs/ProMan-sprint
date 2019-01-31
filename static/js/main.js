@@ -89,7 +89,7 @@ var app = new Vue({
             this.newBoard = null
         },
         async addBoardPublic() {
-             if (this.newBoard) {
+             if (this.newdrag=falseBoard) {
                  let data = await fetch(
                      'http://127.0.0.1:8000/boards/public',
                      {
@@ -179,6 +179,10 @@ var app = new Vue({
                 column.cards.unshift({ title: this.newCard[column.id], id:column.cards + 1})
                 this.newCard[column.id]= null
             }
+        },
+        async endDrag(card) {
+            this.drag = false;
+            console.log(card)
         }
     },
     async mounted () {
