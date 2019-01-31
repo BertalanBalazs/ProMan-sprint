@@ -72,13 +72,13 @@ def add_new_user():
 
 
 @app.route('/statuses', methods=['POST'])
-def new_status():
+def save_new_status():
     status_title = request.form['title']
     board_id = request.form['boardId']
     board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
     try:
         if not data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses'):
-            data_manager.new_status(status_title)
+            data_manager.save_new_status(status_title)
         status_id = data_manager.get_data({'key': 'name', 'value': status_title}, 'statuses')[0]['id']
         if status_id not in board_statuses:
             data_manager.add_status_to_board(board_id, status_id)
@@ -86,6 +86,18 @@ def new_status():
         return jsonify({'done': False, 'message': 'Database error'})
     else:
         return jsonify({'done': True, 'message': 'Status added'})
+
+
+@app.route('/cards/<id_>', methods=['PATCH'])
+def change_status(id_):
+    new_status = request.form.to_dict()
+    new_status['id'] = id_
+    try:
+        data_manager.change_status(new_status)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'Status changed'})
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])
