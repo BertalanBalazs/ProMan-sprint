@@ -62,7 +62,7 @@ def create_card():
 
 @app.route('/users', methods=['POST'])
 def add_new_user():
-    data = request.get_json()
+    data = request.form.to_dict()
     try:
         data_manager.register_new_user(data)
     except:
