@@ -75,6 +75,14 @@ def save_new_card(cursor, card_data):
                     VALUES (%(title)s, %(boardId)s, %(statusId)s, %(orderNum)s, %(userId)s)
                     """,
                    card_data)
+@connection_handler
+def get_status_for_board(cursor, status_ids):
+    cursor.execute("""
+                    SELECT * FROM statuses
+                    WHERE id in %(status_ids)s
+                    """,
+                   {'status_ids': tuple(status_ids)})
+    return cursor.fetchall()
 
 
 @connection_handler

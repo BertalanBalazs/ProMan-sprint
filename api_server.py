@@ -28,10 +28,10 @@ def get_user():
     return common.make_db_query(criteria, 'users')
 
 
-@app.route('/statuses', methods=['GET'])
-def get_status():
-    criteria = request.args.to_dict()
-    return common.make_db_query(criteria, 'statuses')
+@app.route('/statuses/<board_id>', methods=['GET'])
+def get_status(board_id):
+    statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    return jsonify({'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
 
 
 @app.route('/boards/<type>', methods=['POST'])

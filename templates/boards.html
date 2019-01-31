@@ -38,13 +38,13 @@
 
     <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js" defer></script>
     <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js" defer></script>
-
+    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
 
     <script src="{{ url_for('static', filename='js/sample_data.js') }}" defer></script>
     <script src="{{ url_for('static', filename='js/data_handler.js') }}" defer></script>
 
     <script src="{{ url_for('static', filename='js/dom.js') }}" defer></script>
-    <script src="{{ url_for('static', filename='js/main.js') }}" defer></script>
+
 
 <nav class="navbar navbar-expand-lg navbar-dark primary-color">
 <a class="navbar-brand" href="#">ProMáv</a>
@@ -192,6 +192,7 @@
 
 
         <!-- Board list -->
+
     <div class="row">
         <div class="col">
             <b-card v-for="(board, index) in boards" no-body class="mb-1">

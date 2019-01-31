@@ -54,6 +54,9 @@ var app = new Vue({
         ],
         // cards: ['Thomas', 'Rosie', 'Edward', 'Henry', 'Gordon', 'James']
     },
+    mounted: async function() {
+        await this.init()
+    },
     methods: {
         closeModalWarning() {
             console.log('close')
@@ -93,18 +96,26 @@ var app = new Vue({
                 board.columns.unshift({ title: this.newColumn, id:board.length + 1, cards:[]})
                 this.newColumn = null
             }
-        }
+        },
+        async init() {
+            const url = new URL('http://127.0.0.1:8000/boards');
+            url.search = new URLSearchParams({user_id: 0});
+            const data =  await fetch(url).then((response) => response.json());
+            console.log(data);
+            this.test = data.result;
+        },
     },
-    async mounted () {
-        const data = await fetch('/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-        .then((response) => response.json())
+
+    // async mounted () {
+        // const data = await fetch('/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+        // .then((response) => response.json())
         // this.boards = data.result
 
         /*// parse JSON format into JS object
         .then((data) => {
             this.boards = data.result;
         })*/
-    }
+    // }
 });
 
 
