@@ -15,17 +15,7 @@ function pauseAudio() {
 }
 const socket = io.connect('http://localhost:8000');
     socket.on('database-change', async function() {
-        let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-            .then((response) => response.json())
-        let data2 = data.result
-        for (const item of data2) {
-            item.columns = []
-        }
-        app.allBoard = data2
-        const user = document.getElementById('showusername')
-        if (user && user.dataset) {
-            app.authenticated = (user.dataset.userid)
-        }
+        await app.loadData()
     });
 
 var app = new Vue({
@@ -120,7 +110,7 @@ var app = new Vue({
                 )
                     .then((response) => response.json())
 
-                this.boards.unshift({title: this.newBoard, id: data.result, columns: []})
+                this.boards.push({title: this.newBoard, id: data.result, columns: []})
                 this.newBoard = null
             }
 
@@ -137,7 +127,7 @@ var app = new Vue({
                     }
                 )
                     .then((response) => response.json())
-                this.boards.unshift({title: this.newBoard, id: data.result, columns: []})
+                this.boards.push({title: this.newBoard, id: data.result, columns: []})
                 this.newBoard = null
             }
 
@@ -160,7 +150,7 @@ var app = new Vue({
                     headers: {"Content-Type": "application/json"}
                 }
             );
-            this.boards = _.filter(this.boards, item => item.id !== id)
+            await this.loadData()
         },
         handleEnter(event) {
             let key = event.key || event.keyCode;
@@ -240,25 +230,24 @@ var app = new Vue({
         async startDrag(cards) {
             this.drag = true;
             this.columnsBeforeDrag = cards
-        }
+        },
+        async loadData() {
+             let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+            .then((response) => response.json())
+                let data2 = data.result
+                for (const item of data2) {
+                    item.columns = []
+                }
+                this.allBoard = data2
+                const user = document.getElementById('showusername')
+                if (user && user.dataset) {
+                    this.authenticated = (user.dataset.userid)
+                }
+            }
+
     },
     async mounted() {
-        let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-            .then((response) => response.json())
-        let data2 = data.result
-        for (const item of data2) {
-            item.columns = []
-        }
-        this.allBoard = data2
-        const user = document.getElementById('showusername')
-        if (user && user.dataset) {
-            this.authenticated = (user.dataset.userid)
-        }
-
-        /*// parse JSON format into JS object
-        .then((data) => {
-            this.boards = data.result;
-        })*/
+        await this.loadData()
     }
 });
 

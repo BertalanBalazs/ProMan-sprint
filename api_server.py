@@ -107,7 +107,7 @@ def change_status(id_):
 
 @app.route('/boards/<_id>', methods=['DELETE'])
 def delete_board(_id):
-    socketio.emit('database-change', {'test': 'test'})
+    # socketio.emit('database-change', {'test': 'test'})
     criteria = {'key': 'id', 'value': _id}
     return common.delete_from_db(criteria, 'boards')
 
