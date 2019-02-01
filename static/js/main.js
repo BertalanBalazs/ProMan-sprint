@@ -15,7 +15,7 @@ function pauseAudio() {
 }
 const socket = io.connect('http://localhost:8000');
     socket.on('database-change', async function() {
-        await app.loadData()
+        // await app.loadData()
     });
 
 var app = new Vue({
@@ -172,7 +172,7 @@ var app = new Vue({
                         headers: {"Content-Type": "application/json"}
                     }
                 );
-                board.columns.unshift({title: this.newColumn, id: data.result, cards: []})
+                board.columns.push({title: this.newColumn, id: data.result, cards: []})
                 this.newColumn = null
             }
         },
@@ -235,8 +235,8 @@ var app = new Vue({
              let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
             .then((response) => response.json())
                 let data2 = data.result
-                for (const item of data2) {
-                    item.columns = []
+                for (let item of data2) {
+                    item['columns'] = []
                 }
                 this.allBoard = data2
                 const user = document.getElementById('showusername')
