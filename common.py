@@ -1,6 +1,6 @@
 from flask import jsonify
 import data_manager
-
+import socketio
 
 def delete_from_db(criteria, table):
     try:
@@ -10,6 +10,7 @@ def delete_from_db(criteria, table):
     else:
         # if user_id_of_deleted_row == 0:
             # socketio.emit('refresh')
+
         return jsonify({"done": True, "message": "Successful delete", 'user_id': criteria['value']})
 
 
@@ -23,5 +24,6 @@ def make_db_query(criteria, table):
     except:
         return jsonify({"done": False, "reason": "Database error"})
     else:
+
         return jsonify({"done": True, "message": "Successful query", "result": query_result})
 

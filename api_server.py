@@ -34,7 +34,8 @@ def get_user():
 def get_status(board_id):
     statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
     if statuses:
-        return jsonify({'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
+        return jsonify(
+            {'done': True, 'message': 'Successful query', 'result': data_manager.get_status_for_board(statuses)})
     else:
         return jsonify({'done': True, 'message': 'Successful query', 'result': {}})
 
@@ -43,6 +44,7 @@ def get_status(board_id):
 def new_board(type):
     userid = request.get_json()['userid']
     boardtitle = request.get_json()['title']
+
     try:
         if type == 'public':
             board_id = data_manager.new_board(boardtitle, 0)['id']
@@ -51,6 +53,7 @@ def new_board(type):
     except:
         return jsonify({'done': False, 'message': 'Database error', 'result': board_id})
     else:
+        socketio.emit('boardlist-change')
         return jsonify({'done': True, 'message': 'New board added', 'result': board_id})
 
 
@@ -62,6 +65,8 @@ def create_card():
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:
+        socketio.emit('board-change')
+
         return jsonify({'done': True, 'message': 'New card added'})
 
 
@@ -90,6 +95,7 @@ def save_new_status():
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:
+        socketio.emit('board-change')
         return jsonify({'done': True, 'message': 'Status added', 'result': status_id})
 
 
@@ -102,19 +108,22 @@ def change_status(id_):
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:
+        socketio.emit('board-change')
         return jsonify({'done': True, 'message': 'Status changed'})
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])
 def delete_board(_id):
-    # socketio.emit('database-change', {'test': 'test'})
     criteria = {'key': 'id', 'value': _id}
+    socketio.emit('boardlist-change')
     return common.delete_from_db(criteria, 'boards')
 
 
 @app.route('/cards/<_id>', methods=['DELETE'])
 def delete_card(_id):
     criteria = {'key': 'id', 'value': _id}
+    socketio.emit('board-change')
+
     return common.delete_from_db(criteria, 'cards')
 
 
