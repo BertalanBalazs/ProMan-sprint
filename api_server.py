@@ -118,6 +118,21 @@ def delete_card(_id):
     return common.delete_from_db(criteria, 'cards')
 
 
+@app.route('/boards/<_id>/<status_id>', methods=['DELETE'])
+def delete_status(_id, status_id):
+    # socketio.emit('database-change', {'test': 'test'})
+    criteria = {'key': 'id', 'value': _id}
+    statuses = data_manager.get_data(criteria, 'boards')[0]['status_ids']
+    statuses.remove(int(status_id))
+    data_manager.delete_row('cards', {'key': 'status_id', 'value': status_id})
+    try:
+        data_manager.rewrite_status_ids(statuses, _id)
+    except:
+        return jsonify({'done': False, 'message': 'Database error'})
+    else:
+        return jsonify({'done': True, 'message': 'Status deleted'})
+
+
 def main():
     socketio.run(
         app,

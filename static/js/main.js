@@ -1,6 +1,18 @@
 // Music player
 var x = document.getElementById("myAudio");
 
+document.getElementById('test-btn').addEventListener('click', async function() {
+    let data = await fetch(
+        'http://127.0.0.1:8000/boards/45/32',
+        {
+            method: 'DELETE',
+            mode: "cors",
+            headers: {"Content-Type": "application/json"}
+        }
+    )
+    console.log(data)
+})
+
 function playAudio() {
     document.getElementById('play').style.display = 'none';
     document.getElementById('stop').style.display = 'block';
