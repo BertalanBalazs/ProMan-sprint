@@ -13,6 +13,8 @@ function pauseAudio() {
     document.getElementById('play').style.display = 'block';
     x.pause();
 }
+
+
 const socket = io.connect('http://localhost:8000');
     socket.on('database-change', async function() {
         await app.loadData()
@@ -140,10 +142,33 @@ var app = new Vue({
             } else {
                 this.editColumn = id
             }
+
         },
         async deleteBoard(id) {
             await fetch(
                 `http://127.0.0.1:8000/boards/${id}`,
+                {
+                    method: 'DELETE',
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
+            await this.loadData()
+        },
+        async deleteColumn(board_id, column_id) {
+            await fetch(
+                `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
+                {
+                    method: 'DELETE',
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
+            await this.loadData()
+        },
+        async deleteCard(card_id) {
+            await fetch(
+                `http://127.0.0.1:8000/cards/${card_id}/`,
                 {
                     method: 'DELETE',
                     mode: "cors",

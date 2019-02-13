@@ -272,7 +272,8 @@
                                         <!-- Add new card start -->
                                         <div class="row">
                                             <div class="col-auto">
-
+                                                <a @click="deleteColumn(board.id,column.id)" class="btn-floating btn-lg young-passion-gradient" id="delete_column"><i
+                                                class="fas column_delete fa-trash-alt"></i></a>
 
                                                 <b-button @click="addCard(board.id, column)">
                                                     Add
@@ -324,26 +325,24 @@
                                                         <a>
                                                             <p @dblclick="rename(card.id,'card')"
                                                                @keypress="handleEnter">
-                    <span v-if="editCard !== card.id">
-                        {{ card.title }}
-                    </span>
+                                                                <span v-if="editCard !== card.id">
+                                                                    {{ card.title }}
+                                                                </span>
                                                                 <span v-else>
-                        <b-form-input v-model="card.title">
-                            {{ card.title }}
-                        </b-form-input>
-                    </span>
+                                                                    <b-form-input v-model="card.title">
+                                                                        {{ card.title }}
+                                                                    </b-form-input>
+                                                                </span>
                                                             </p>
                                                         </a>
-
+                                                        <a @click="deleteCard(card.id)" class="btn-floating btn-lg young-passion-gradient" id="delete_card"><i
+                                                        class="fas card_delete fa-trash-alt"></i></a>
                                                     </div>
                                                     <!-- Card image -->
                                                 </div>
                                                 <!-- Collection card -->
                                                 <br>
-
-
                                             </div>
-
                                         </draggable>
                                     </div>
                                     </div>
