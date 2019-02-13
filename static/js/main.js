@@ -15,6 +15,7 @@ function pauseAudio() {
     x.pause();
 }
 
+
 const socket = io.connect('http://localhost:8000');
 
 var
@@ -174,13 +175,33 @@ var
                     }
                 );
                 await this.loadData()
-            }
-            ,
-            handleEnter(event) {
-                let key = event.key || event.keyCode;
-                if (key === 'Enter' || key === 13) {
-                    this.editBoard = this.editCard = this.editColumn = 0;
+            },
+        async deleteColumn(board_id, column_id) {
+            await fetch(
+                `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
+                {
+                    method: 'DELETE',
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
                 }
+            );
+            await this.loadData()
+        },
+        async deleteCard(card_id) {
+            await fetch(
+                `http://127.0.0.1:8000/cards/${card_id}/`,
+                {
+                    method: 'DELETE',
+                    mode: "cors",
+                    headers: {"Content-Type": "application/json"}
+                }
+            );
+            await this.loadData()
+        },
+        handleEnter(event) {
+            let key = event.key || event.keyCode;
+            if (key === 'Enter' || key === 13) {
+                this.editBoard = this.editCard = this.editColumn = 0;
             }
             ,
             async addColumn(board) {
