@@ -177,7 +177,7 @@ var
                 await this.loadData()
             },
         async deleteColumn(board_id, column_id) {
-            await fetch(
+             fetch(
                 `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
                 {
                     method: 'DELETE',
@@ -185,26 +185,25 @@ var
                     headers: {"Content-Type": "application/json"}
                 }
             );
-            await this.loadData()
+             await this.loadData()
         },
         async deleteCard(card_id) {
-            await fetch(
-                `http://127.0.0.1:8000/cards/${card_id}/`,
+            fetch(
+                `http://127.0.0.1:8000/cards/${card_id}`,
                 {
                     method: 'DELETE',
                     mode: "cors",
                     headers: {"Content-Type": "application/json"}
                 }
             );
-            await this.loadData()
         },
         handleEnter(event) {
             let key = event.key || event.keyCode;
             if (key === 'Enter' || key === 13) {
                 this.editBoard = this.editCard = this.editColumn = 0;
             }
-            ,
-            async addColumn(board) {
+        },
+            async addColumn(board){
                 if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett') {
                     $('#modalWarning').modal('show')
                     return
