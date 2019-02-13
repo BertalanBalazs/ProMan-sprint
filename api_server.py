@@ -142,15 +142,11 @@ def delete_status(_id, status_id):
         return jsonify({'done': True, 'message': 'Status deleted'})
 
 
-@socketio.on('getstatuses')
-def socketio_get_statuses(boardid):
-    socketio.emit('statuses_response',
-                  data_manager.get_data({'key': 'id', 'value': boardid}, 'boards')[0]['status_ids'])
-
-
-@socketio.on('getcards')
-def socketio_get_cards(boardid):
-    socketio.emit('cards_response', data_manager.get_data({'key': 'board_id', 'value': boardid}, 'cards'))
+@socketio.on('refresh-request')
+def socketio_get_statuses(board_id):
+    statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    cards = data_manager.get_data({'key': 'board_id', 'value': board_id}, 'cards')
+    socketio.emit('refresh-response', {'statuses': statuses, 'cards': cards, 'boardId': board_id})
 
 
 def main():

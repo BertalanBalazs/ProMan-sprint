@@ -17,7 +17,6 @@ function pauseAudio() {
 
 const socket = io.connect('http://localhost:8000');
 
-
 var
     app = new Vue({
         el: '#app',
@@ -83,26 +82,26 @@ var
 
             async selectBoard(board) {
 
-                if (board.isActive == false) await this.refreshBoard(board);
+                if (board.isActive == false) socket.emit('refresh-request', board.id);
 
                 board.isActive ? board.isActive = false : board.isActive = true;
 
             }
             ,
-            async refreshBoard(board) {
+            refreshBoard(board) {
                 /*   let columns = await fetch(`http://127.0.0.1:8000/statuses/${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
                        .then((response) => response.json())
                    let cards = await fetch(`http://127.0.0.1:8000/cards?board_id=${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
                        .then((response) => response.json())*/
-                let cards, columns;
-                socket.emit('getstatuses', board.id)
-                socket.on('statuses_response', function (result) {
-                    columns = result.result;
-                })
-                socket.emit('getcards', board.id)
-                socket.on('cards_response', function (result) {
-                    cards = result.result;
-                })
+
+            },
+            saveSocketData(boardId, columns, cards) {
+                let board;
+                for (let item of this.allBoard) {
+                    if (item.id === boardId) {
+                        board = item
+                    }
+                }
                 if (columns.length > 0) {
                     for (let column of columns) {
                         column.cards = _.filter(cards, {status_id: column.id})
@@ -110,9 +109,7 @@ var
                     }
                 }
                 board.columns = columns
-            }
-            ,
-
+            },
             closeModalWarning() {
                 console.log('close')
                 $('#modalWarning').modal('hide')
@@ -281,20 +278,21 @@ var
         }
         ,
         async mounted() {
-            await this.loadData()
+            await this.loadData();
             socket.on('boardlist-change', async function () {
                 await app.loadData()
             });
             socket.on('board-change', async function () {
-                console.log("fos");
                 for (let i = 0; i < app.allBoard.length; i++) {
                     let board = app.allBoard[i];
                     if (board.isActive) {
-                        await app.refreshBoard(board);
+                        socket.emit('refresh-board', board.id);
                     }
                 }
-            })
-            socket.on
+            });
+            socket.on('refresh-response', function (result) {
+                app.saveSocketData(result.boardId, result.statuses, result.cards)
+            });
         }
     })
 ;
