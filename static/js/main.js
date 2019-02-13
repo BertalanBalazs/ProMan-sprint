@@ -286,7 +286,7 @@ var
                 for (let i = 0; i < app.allBoard.length; i++) {
                     let board = app.allBoard[i];
                     if (board.isActive) {
-                        socket.emit('refresh-board', board.id);
+                        socket.emit('refresh-request', board.id);
                     }
                 }
             });

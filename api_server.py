@@ -144,7 +144,8 @@ def delete_status(_id, status_id):
 
 @socketio.on('refresh-request')
 def socketio_get_statuses(board_id):
-    statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    status_ids = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    statuses = data_manager.get_status_for_board(status_ids)
     cards = data_manager.get_data({'key': 'board_id', 'value': board_id}, 'cards')
     socketio.emit('refresh-response', {'statuses': statuses, 'cards': cards, 'boardId': board_id})
 
