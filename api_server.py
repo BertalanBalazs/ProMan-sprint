@@ -129,7 +129,6 @@ def delete_card(_id):
 
 @app.route('/boards/<_id>/<status_id>', methods=['DELETE'])
 def delete_status(_id, status_id):
-    # socketio.emit('database-change', {'test': 'test'})
     criteria = {'key': 'id', 'value': _id}
     statuses = data_manager.get_data(criteria, 'boards')[0]['status_ids']
     statuses.remove(int(status_id))
@@ -139,6 +138,7 @@ def delete_status(_id, status_id):
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:
+        socketio.emit('board-change')
         return jsonify({'done': True, 'message': 'Status deleted'})
 
 

@@ -1,17 +1,6 @@
 // Music player
 var x = document.getElementById("myAudio");
 
-document.getElementById('test-btn').addEventListener('click', async function() {
-    let data = await fetch(
-        'http://127.0.0.1:8000/boards/45/32',
-        {
-            method: 'DELETE',
-            mode: "cors",
-            headers: {"Content-Type": "application/json"}
-        }
-    )
-    console.log(data)
-})
 
 function playAudio() {
     document.getElementById('play').style.display = 'none';
@@ -25,10 +14,20 @@ function pauseAudio() {
     document.getElementById('play').style.display = 'block';
     x.pause();
 }
+
 const socket = io.connect('http://localhost:8000');
-    socket.on('database-change', async function() {
-        await app.loadData()
-    });
+socket.on('boardlist-change', async function () {
+    await app.loadData()
+});
+socket.on('board-change', async function () {
+    console.log("fos");
+    for (let i = 0; i < app.allBoard.length; i++) {
+        let board = app.allBoard[i];
+        if (board.isActive) {
+            await app.refreshBoard(board);
+        }
+    }
+})
 
 var app = new Vue({
     el: '#app',
@@ -75,40 +74,35 @@ var app = new Vue({
         }
     },
     methods: {
+
         async selectBoard(board) {
-            document.getElementById('play').style.display = 'none';
-            document.getElementById('stop').style.display = 'block';
-            //x.play();
-            const user = document.getElementById('showusername')
-            if (user && user.dataset) {
-                this.authenticated = (user.dataset.userid)
-            }
 
+            if (board.isActive == false) await this.refreshBoard(board);
 
-            let newBoard = _.cloneDeep(board)
-            console.log('board')
+            board.isActive ? board.isActive = false : board.isActive = true;
+
+        },
+        async refreshBoard(board) {
             let columns = await fetch(`http://127.0.0.1:8000/statuses/${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
                 .then((response) => response.json())
             columns = columns.result
             let cards = await fetch(`http://127.0.0.1:8000/cards?board_id=${board.id}`)  // set the path; the method is GET by default, but can be modified with a second parameter
                 .then((response) => response.json())
             cards = cards.result
-            console.log(cards)
             if (columns.length > 0) {
                 for (let column of columns) {
                     column.cards = _.filter(cards, {status_id: column.id})
                     if (_.isEmpty(column.cards)) column.cards = []
                 }
             }
-            console.log(columns)
             board.columns = columns
-
         },
         closeModalWarning() {
             console.log('close')
             $('#modalWarning').modal('hide')
             this.newBoard = null
         },
+
         async addBoardPublic() {
             if (this.newBoard) {
                 let data = await fetch(
@@ -225,7 +219,7 @@ var app = new Vue({
             let newStatusId;
             for (column of columns) {
                 if (column.cards.includes(draggedcard)) newStatusId = column.id;
-                    }
+            }
             let data = await fetch(
                 `http://127.0.0.1:8000/cards/${draggedcard.id}`,
                 {
@@ -244,18 +238,19 @@ var app = new Vue({
             this.columnsBeforeDrag = cards
         },
         async loadData() {
-             let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-            .then((response) => response.json())
-                let data2 = data.result
-                for (const item of data2) {
-                    item.columns = []
-                }
-                this.allBoard = data2
-                const user = document.getElementById('showusername')
-                if (user && user.dataset) {
-                    this.authenticated = (user.dataset.userid)
-                }
+            let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+                .then((response) => response.json())
+            let data2 = data.result
+            for (const item of data2) {
+                item.columns = []
+                item.isActive = false;
             }
+            this.allBoard = data2
+            const user = document.getElementById('showusername')
+            if (user && user.dataset) {
+                this.authenticated = (user.dataset.userid)
+            }
+        }
 
     },
     async mounted() {
