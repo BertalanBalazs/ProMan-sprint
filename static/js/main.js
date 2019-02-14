@@ -170,7 +170,7 @@ var
                     $('#modalWarning').modal('show')
                     return
                 } else if (this.newColumn) {
-                    socket.emit('change-status', {boarId: board.id, title: this.newColumn});
+                    socket.emit('add-status', {boardId: board.id, title: this.newColumn});
 
 
                     this.newColumn = null

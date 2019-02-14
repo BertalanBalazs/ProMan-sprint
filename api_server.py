@@ -195,7 +195,7 @@ def socketio_delete_status(message):
     statuses = data_manager.get_data(criteria, 'boards')[0]['status_ids']
     statuses.remove(int(message['column_id']))
     data_manager.delete_row('cards', {'key': 'status_id', 'value': message['column_id']})
-    data_manager.rewrite_status_ids(statuses, message['board_id'])
+    data_manager.rewrite_status_ids(statuses, message['board_id'], message['column_id'])
     socketio.emit('board-change')
 
 
