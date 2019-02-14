@@ -148,7 +148,7 @@ def delete_status(_id, status_id):
     statuses.remove(int(status_id))
     data_manager.delete_row('cards', {'key': 'status_id', 'value': status_id})
     try:
-        data_manager.rewrite_status_ids(statuses, _id)
+        data_manager.rewrite_status_ids(statuses, _id, status_id)
     except:
         return jsonify({'done': False, 'message': 'Database error'})
     else:

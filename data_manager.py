@@ -66,7 +66,9 @@ def add_status_to_board(cursor, board_id, status_id):
     cursor.execute("""
     UPDATE boards
      SET status_ids = status_ids || %(status_id)s
-    WHERE id = %(board_id)s""", {'board_id': board_id, 'status_id': status_id})
+    WHERE id = %(board_id)s;
+    INSERT INTO boards_statuses (board_id, status_id)
+    VALUES (%(board_id)s, %(status_id)s)""", {'board_id': board_id, 'status_id': status_id})
 
 
 @connection_handler
@@ -99,12 +101,14 @@ def change_status(cursor, new_status):
 
 
 @connection_handler
-def rewrite_status_ids(cursor, new_statuses, board_id):
+def rewrite_status_ids(cursor, new_statuses, board_id, status_id):
     cursor.execute("""
         UPDATE boards
         SET status_ids = %(new_statuses)s
-        WHERE id = %(board_id)s
-    """, {'new_statuses': new_statuses, 'board_id': board_id})
+        WHERE id = %(board_id)s;
+        DELETE FROM boards_statuses
+        WHERE status_id = %(status_id)s AND board_id = %(board_id)s
+    """, {'new_statuses': new_statuses, 'board_id': board_id, 'status_id': status_id})
 
 
 @connection_handler
