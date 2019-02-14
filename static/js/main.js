@@ -262,7 +262,7 @@ var
                 let statuses = result.statuses;
                 let cards = result.cards;
                 let boards = [];
-                for (let i = 0; i < result.board_ids; i++) {
+                for (let i = 0; i < result.board_ids.length; i++) {
                     boards.push({'boardId': result.board_ids[i], 'cards': [], 'statuses': []})
                     for (let j = 0; j < statuses.length; j++) {
                         let status = statuses[j];
