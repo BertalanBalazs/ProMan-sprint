@@ -111,7 +111,7 @@ var
                     }
                 }
 
-                if(columns) board.columns = columns
+                if (columns) board.columns = columns
             },
             closeModalWarning() {
                 console.log('close')
@@ -120,20 +120,9 @@ var
             }
             ,
 
-            async addBoardPublic() {
+            addBoardPublic() {
                 if (this.newBoard) {
-                    let data = await fetch(
-                        'http://127.0.0.1:8000/boards/public',
-                        {
-                            method: 'POST',
-                            body: JSON.stringify({userid: this.authenticated, title: this.newBoard}),
-                            mode: "cors",
-                            headers: {"Content-Type": "application/json"}
-                        }
-                    )
-                        .then((response) => response.json())
-
-                    this.boards.push({title: this.newBoard, id: data.result, columns: []})
+                    socket.emit('add-board', {userid: 0, title: this.newBoard});
                     this.newBoard = null
                 }
 
@@ -141,19 +130,10 @@ var
             ,
             async addBoardPrivate() {
                 if (this.newBoard) {
-                    let data = await fetch(
-                        'http://127.0.0.1:8000/boards/private',
-                        {
-                            method: 'POST',
-                            body: JSON.stringify({userid: this.authenticated, title: this.newBoard}),
-                            mode: "cors",
-                            headers: {"Content-Type": "application/json"}
-                        }
-                    )
-                        .then((response) => response.json())
-                    this.boards.push({title: this.newBoard, id: data.result, columns: []})
+                    socket.emit('add-board', {userid: this.authenticated, title: this.newBoard});
                     this.newBoard = null
                 }
+
 
             }
             ,
@@ -168,36 +148,16 @@ var
             }
             ,
             async deleteBoard(id) {
-                await fetch(
-                    `http://127.0.0.1:8000/boards/${id}`,
-                    {
-                        method: 'DELETE',
-                        mode: "cors",
-                        headers: {"Content-Type": "application/json"}
-                    }
-                );
-                await this.loadData()
+                socket.emit('delete-board', {id: id});
+
+
             },
             async deleteColumn(board_id, column_id) {
-                fetch(
-                    `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
-                    {
-                        method: 'DELETE',
-                        mode: "cors",
-                        headers: {"Content-Type": "application/json"}
-                    }
-                );
-                await this.loadData()
+                socket.emit('delete-column', {board_id: board_id, column_id: column_id});
             },
             async deleteCard(card_id) {
-                fetch(
-                    `http://127.0.0.1:8000/cards/${card_id}`,
-                    {
-                        method: 'DELETE',
-                        mode: "cors",
-                        headers: {"Content-Type": "application/json"}
-                    }
-                );
+                socket.emit('delete-card', {card_id: card_id});
+
             },
             handleEnter(event) {
                 let key = event.key || event.keyCode;
@@ -210,16 +170,9 @@ var
                     $('#modalWarning').modal('show')
                     return
                 } else if (this.newColumn) {
-                    let data = await fetch(
-                        'http://127.0.0.1:8000/statuses',
-                        {
-                            method: 'POST',
-                            body: JSON.stringify({boardId: board.id, title: this.newColumn}),
-                            mode: "cors",
-                            headers: {"Content-Type": "application/json"}
-                        }
-                    );
-                    board.columns.unshift({title: this.newColumn, id: data.result, cards: []})
+                    socket.emit('change-status', {boarId: board.id, title: this.newColumn});
+
+
                     this.newColumn = null
                 }
             }
@@ -267,6 +220,7 @@ var
             }
             ,
             async loadData() {
+
                 let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
                     .then((response) => response.json())
                 let data2 = data.result
