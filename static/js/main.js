@@ -220,15 +220,16 @@ var
             }
             ,
             async loadData() {
-
-                let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
-                    .then((response) => response.json())
-                let data2 = data.result
-                for (const item of data2) {
+                socket.emit('load-data')
+                //let data = await fetch('http://127.0.0.1:8000/boards')  // set the path; the method is GET by default, but can be modified with a second parameter
+                  //  .then((response) => response.json())
+            },
+            saveAllBoard(data) {
+                for (const item of data) {
                     item.columns = []
                     item.isActive = false;
                 }
-                this.allBoard = data2
+                this.allBoard = data
                 const user = document.getElementById('showusername')
                 if (user && user.dataset) {
                     this.authenticated = (user.dataset.userid)
@@ -253,6 +254,10 @@ var
                 socket.emit('refresh-request', activeBoards);
 
             });
+            socket.on('load-data', function(data) {
+                app.saveAllBoard(data)
+            });
+
             socket.on('refresh-response', function (result) {
                 let statuses = result.statuses;
                 let cards = result.cards;

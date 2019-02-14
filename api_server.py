@@ -18,6 +18,11 @@ def get_boards():
     return common.make_db_query(criteria, 'boards')
 
 
+@socketio.on('load-data')
+def socketio_get_boards():
+    boards = data_manager.get_data({}, 'boards')
+    socketio.emit('load-data', boards)
+
 @app.route('/cards', methods=['GET'])
 def get_cards():
     criteria = request.args.to_dict()
@@ -169,7 +174,7 @@ def delete_card(_id):
 
 @socketio.on('delete-card')
 def socketio_delete_card(message):
-    criteria = {'key': 'id', 'value': message['id']}
+    criteria = {'key': 'id', 'value': message['card_id']}
     common.delete_from_db(criteria, 'cards')
     socketio.emit('board-change')
 
