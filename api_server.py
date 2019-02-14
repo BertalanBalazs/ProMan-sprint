@@ -70,6 +70,12 @@ def create_card():
         return jsonify({'done': True, 'message': 'New card added'})
 
 
+@socketio.on('add-card')
+def socketio_create_card(message):
+    data_manager.save_new_card(message)
+    socketio.emit('board-change')
+
+
 @app.route('/users', methods=['POST'])
 def add_new_user():
     data = request.form.to_dict()
@@ -99,6 +105,8 @@ def save_new_status():
         return jsonify({'done': True, 'message': 'Status added', 'result': status_id})
 
 
+
+
 @app.route('/cards/<id_>', methods=['PATCH'])
 def change_status(id_):
     new_status = request.get_json()
@@ -110,6 +118,12 @@ def change_status(id_):
     else:
         socketio.emit('board-change')
         return jsonify({'done': True, 'message': 'Status changed'})
+
+
+@socketio.on('change-status')
+def socket_change_status(message):
+    data_manager.change_status(message)
+    socketio.emit('board-change')
 
 
 @app.route('/boards/<_id>', methods=['DELETE'])
@@ -143,11 +157,10 @@ def delete_status(_id, status_id):
 
 
 @socketio.on('refresh-request')
-def socketio_get_statuses(board_id):
-    status_ids = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
-    statuses = data_manager.get_status_for_board(status_ids)
-    cards = data_manager.get_data({'key': 'board_id', 'value': board_id}, 'cards')
-    socketio.emit('refresh-response', {'statuses': statuses, 'cards': cards, 'boardId': board_id})
+def socketio_get_statuses(board_ids):
+    boards_statuses = data_manager.get_statuses_of_boards(board_ids)
+    boards_cards = data_manager.get_cards_of_boards(board_ids)
+    socketio.emit('refresh-response', {'board_ids': board_ids, 'statuses': boards_statuses, 'cards': boards_cards})
 
 
 def main():

@@ -105,3 +105,24 @@ def rewrite_status_ids(cursor, new_statuses, board_id):
         SET status_ids = %(new_statuses)s
         WHERE id = %(board_id)s
     """, {'new_statuses': new_statuses, 'board_id': board_id})
+
+
+@connection_handler
+def get_statuses_of_boards(cursor, board_ids):
+    cursor.execute(
+        '''SELECT boards.id as boardID, s.* FROM boards
+            left join boards_statuses bs on boards.id = bs.board_id
+            left join statuses s on bs.status_id = s.id
+            WHERE boards.id IN %(board_ids)s
+            ''', {'board_ids': tuple(board_ids)}
+    )
+    return cursor.fetchall()
+
+
+@connection_handler
+def get_cards_of_boards(cursor, board_ids):
+    cursor.execute('''
+        SELECT * from cards
+        WHERE board_id IN %(board_ids)s;
+''', {'board_ids': tuple(board_ids)})
+    return cursor.fetchall()

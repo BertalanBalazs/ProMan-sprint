@@ -81,9 +81,9 @@ var
         ,
         methods: {
 
-            async selectBoard(board) {
+            selectBoard(board) {
 
-                if (board.isActive == false) socket.emit('refresh-request', board.id);
+                if (board.isActive == false) socket.emit('refresh-request', [board.id]);
 
                 board.isActive ? board.isActive = false : board.isActive = true;
 
@@ -98,7 +98,8 @@ var
             },
             saveSocketData(boardId, columns, cards) {
                 let board;
-                for (let item of this.allBoard) {
+                for (let i = 0; i < this.allBoard.length; i++) {
+                    let item = this.allBoard[i];
                     if (item.id === boardId) {
                         board = item
                     }
@@ -109,7 +110,8 @@ var
                         if (_.isEmpty(column.cards)) column.cards = []
                     }
                 }
-                board.columns = columns
+
+                if(columns) board.columns = columns
             },
             closeModalWarning() {
                 console.log('close')
@@ -176,34 +178,34 @@ var
                 );
                 await this.loadData()
             },
-        async deleteColumn(board_id, column_id) {
-             fetch(
-                `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
-                {
-                    method: 'DELETE',
-                    mode: "cors",
-                    headers: {"Content-Type": "application/json"}
+            async deleteColumn(board_id, column_id) {
+                fetch(
+                    `http://127.0.0.1:8000/boards/${board_id}/${column_id}`,
+                    {
+                        method: 'DELETE',
+                        mode: "cors",
+                        headers: {"Content-Type": "application/json"}
+                    }
+                );
+                await this.loadData()
+            },
+            async deleteCard(card_id) {
+                fetch(
+                    `http://127.0.0.1:8000/cards/${card_id}`,
+                    {
+                        method: 'DELETE',
+                        mode: "cors",
+                        headers: {"Content-Type": "application/json"}
+                    }
+                );
+            },
+            handleEnter(event) {
+                let key = event.key || event.keyCode;
+                if (key === 'Enter' || key === 13) {
+                    this.editBoard = this.editCard = this.editColumn = 0;
                 }
-            );
-             await this.loadData()
-        },
-        async deleteCard(card_id) {
-            fetch(
-                `http://127.0.0.1:8000/cards/${card_id}`,
-                {
-                    method: 'DELETE',
-                    mode: "cors",
-                    headers: {"Content-Type": "application/json"}
-                }
-            );
-        },
-        handleEnter(event) {
-            let key = event.key || event.keyCode;
-            if (key === 'Enter' || key === 13) {
-                this.editBoard = this.editCard = this.editColumn = 0;
-            }
-        },
-            async addColumn(board){
+            },
+            async addColumn(board) {
                 if (this.newColumn === 'Arrived on time' || this.newColumn === 'Időben érkezett') {
                     $('#modalWarning').modal('show')
                     return
@@ -224,21 +226,14 @@ var
             ,
             async addCard(boardId, column) {
                 if (this.newCard[column.id]) {
-                    let data = await fetch(
-                        'http://127.0.0.1:8000/cards',
-                        {
-                            method: 'POST',
-                            body: JSON.stringify({
-                                board_id: boardId,
-                                status_id: column.id,
-                                user_id: this.authenticated ? parseInt(this.authenticated) : 0,
-                                order_num: 0,
-                                title: this.newCard[column.id]
-                            }),
-                            mode: "cors",
-                            headers: {"Content-Type": "application/json"}
-                        }
-                    );
+                    socket.emit('add-card', {
+                        'board_id': boardId,
+                        'status_id': column.id,
+                        'user_id': this.authenticated ? parseInt(this.authenticated) : 0,
+                        'order_num': 0,
+                        'title': this.newCard[column.id]
+                    });
+
                     column.cards.unshift({title: this.newCard[column.id], id: column.cards + 1})
                     this.newCard[column.id] = null
                 }
@@ -261,16 +256,7 @@ var
                 for (column of columns) {
                     if (column.cards.includes(draggedcard)) newStatusId = column.id;
                 }
-                let data = await fetch(
-                    `http://127.0.0.1:8000/cards/${draggedcard.id}`,
-                    {
-                        method: 'PATCH',
-                        body: JSON.stringify({statusId: newStatusId}),
-                        mode: "cors",
-                        headers: {"Content-Type": "application/json"}
-                    }
-                );
-                console.log(draggedcard);
+                socket.emit('change-status', {id: draggedcard.id, statusId: newStatusId});
 
 
             }
@@ -302,16 +288,41 @@ var
             socket.on('boardlist-change', async function () {
                 await app.loadData()
             });
-            socket.on('board-change', async function () {
+            socket.on('board-change', function () {
+                let activeBoards = []
                 for (let i = 0; i < app.allBoard.length; i++) {
                     let board = app.allBoard[i];
                     if (board.isActive) {
-                        socket.emit('refresh-request', board.id);
+                        activeBoards.push(board.id)
                     }
                 }
+                socket.emit('refresh-request', activeBoards);
+
             });
             socket.on('refresh-response', function (result) {
-                app.saveSocketData(result.boardId, result.statuses, result.cards)
+                let statuses = result.statuses;
+                let cards = result.cards;
+                let boards = [];
+                for (let i = 0; i < result.board_ids; i++) {
+                    boards.push({'boardId': result.board_ids[i], 'cards': [], 'statuses': []})
+                    for (let j = 0; j < statuses.length; j++) {
+                        let status = statuses[j];
+                        if (status.boardid == result.board_ids[i]) {
+                            boards[i].statuses.push(status);
+                        }
+                    }
+                    for (card of cards) {
+                        if (card.board_id == result.board_ids[i]) {
+                            boards[i].cards.push(card)
+                        }
+                    }
+
+                }
+                for (board of boards) {
+
+
+                    app.saveSocketData(board.boardId, board.statuses, board.cards)
+                }
             });
         }
     })
