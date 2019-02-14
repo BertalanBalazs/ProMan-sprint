@@ -206,9 +206,10 @@ def socketio_delete_status(message):
 
 @socketio.on('refresh-request')
 def socketio_get_statuses(board_ids):
-    boards_statuses = data_manager.get_statuses_of_boards(board_ids)
-    boards_cards = data_manager.get_cards_of_boards(board_ids)
-    socketio.emit('refresh-response', {'board_ids': board_ids, 'statuses': boards_statuses, 'cards': boards_cards})
+    if board_ids:
+        boards_statuses = data_manager.get_statuses_of_boards(board_ids)
+        boards_cards = data_manager.get_cards_of_boards(board_ids)
+        socketio.emit('refresh-response', {'board_ids': board_ids, 'statuses': boards_statuses, 'cards': boards_cards})
 
 
 def main():

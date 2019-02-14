@@ -115,8 +115,8 @@ def rewrite_status_ids(cursor, new_statuses, board_id, status_id):
 def get_statuses_of_boards(cursor, board_ids):
     cursor.execute(
         '''SELECT boards.id as boardID, s.* FROM boards
-            left join boards_statuses bs on boards.id = bs.board_id
-            left join statuses s on bs.status_id = s.id
+            inner join boards_statuses bs on boards.id = bs.board_id
+            inner join statuses s on bs.status_id = s.id
             WHERE boards.id IN %(board_ids)s
             ''', {'board_ids': tuple(board_ids)}
     )
