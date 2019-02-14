@@ -57,6 +57,14 @@ def new_board(type):
         return jsonify({'done': True, 'message': 'New board added', 'result': board_id})
 
 
+@socketio.on('add-board')
+def socketio_new_board(message):
+    userid = message['userid']
+    boardtitle = message['title']
+    data_manager.new_board(boardtitle, userid)['id']
+    socketio.emit('boardlist-change')
+
+
 @app.route('/cards', methods=['POST'])
 def create_card():
     card_data = request.get_json()
@@ -105,6 +113,17 @@ def save_new_status():
         return jsonify({'done': True, 'message': 'Status added', 'result': status_id})
 
 
+@socketio.on('add-status')
+def socketio_save_new_status(message):
+    status_title = message['title']
+    board_id = message['boardId']
+    board_statuses = data_manager.get_data({'key': 'id', 'value': board_id}, 'boards')[0]['status_ids']
+    if not data_manager.get_data({'key': 'title', 'value': status_title}, 'statuses'):
+        data_manager.save_new_status(status_title)
+    status_id = data_manager.get_data({'key': 'title', 'value': status_title}, 'statuses')[0]['id']
+    if status_id not in board_statuses:
+        data_manager.add_status_to_board(board_id, status_id)
+    socketio.emit('board-change')
 
 
 @app.route('/cards/<id_>', methods=['PATCH'])
@@ -133,12 +152,26 @@ def delete_board(_id):
     return common.delete_from_db(criteria, 'boards')
 
 
+@socketio.on('delete-board')
+def socketio_delete_board(message):
+    criteria = {'key': 'id', 'value': message['id']}
+    common.delete_from_db(criteria, 'boards')
+    socketio.emit('boardlist-change')
+
+
 @app.route('/cards/<_id>', methods=['DELETE'])
 def delete_card(_id):
     criteria = {'key': 'id', 'value': _id}
     socketio.emit('board-change')
 
     return common.delete_from_db(criteria, 'cards')
+
+
+@socketio.on('delete-card')
+def socketio_delete_card(message):
+    criteria = {'key': 'id', 'value': message['id']}
+    common.delete_from_db(criteria, 'cards')
+    socketio.emit('board-change')
 
 
 @app.route('/boards/<_id>/<status_id>', methods=['DELETE'])
@@ -154,6 +187,16 @@ def delete_status(_id, status_id):
     else:
         socketio.emit('board-change')
         return jsonify({'done': True, 'message': 'Status deleted'})
+
+
+@socketio.on('delete-column')
+def socketio_delete_status(message):
+    criteria = {'key': 'id', 'value': message['board_id']}
+    statuses = data_manager.get_data(criteria, 'boards')[0]['status_ids']
+    statuses.remove(int(message['column_id']))
+    data_manager.delete_row('cards', {'key': 'status_id', 'value': message['column_id']})
+    data_manager.rewrite_status_ids(statuses, message['board_id'])
+    socketio.emit('board-change')
 
 
 @socketio.on('refresh-request')
